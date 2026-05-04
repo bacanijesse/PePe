@@ -14,7 +14,7 @@ function homeLink(hash) {
 }
 
 const pageInfo = getPageInfo();
-const shouldResetHomeOnLoad = pageInfo.isHome;
+const shouldResetHomeOnLoad = pageInfo.isHome && !window.location.hash;
 
 if (shouldResetHomeOnLoad && "scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -736,6 +736,12 @@ menuButton?.addEventListener("click", () => {
 
 adventureMenuButton?.addEventListener("click", event => {
   event.stopPropagation();
+
+  if (!getPageInfo().isHome) {
+    window.location.href = "index.html#Adventures";
+    return;
+  }
+
   const isOpen = adventureDropdown.classList.toggle("open");
   adventureMenuButton.setAttribute("aria-expanded", isOpen ? "true" : "false");
 });

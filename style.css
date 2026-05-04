@@ -1718,6 +1718,17 @@ body.dark-mode .adventure-mini-stats strong {
     min-height: 0;
   }
 
+  .adventure-detail-media {
+    grid-template-rows: auto auto auto;
+    overflow: visible;
+  }
+
+  .adventure-detail-media > .adventure-video .youtube-frame {
+    aspect-ratio: 16 / 9;
+    height: auto;
+    min-height: clamp(240px, 54vw, 520px);
+  }
+
   .adventure-mini-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
