@@ -1,0 +1,89 @@
+backend:
+  name: git-gateway
+  branch: main
+
+local_backend: true
+
+media_folder: "assets/uploads"
+public_folder: "assets/uploads"
+
+collections:
+  - name: "site_data"
+    label: "Site Data"
+    files:
+      - name: "adventures"
+        label: "Adventures"
+        file: "data/adventures.json"
+        format: "json"
+        fields:
+          - label: "Comment"
+            name: "_comment"
+            widget: "hidden"
+            default: "Adventure card data for the homepage and detail pages."
+          - label: "Adventure List"
+            name: "adventures"
+            widget: "list"
+            summary: "{{fields.title}}"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - label: "Type"
+                name: "type"
+                widget: "select"
+                options: ["ride", "hike"]
+              - { label: "Date", name: "date", widget: "string", hint: "Example: Feb 18, 2026" }
+              - { label: "Distance", name: "distance", widget: "string", hint: "Example: 12.8 km" }
+              - { label: "Elevation", name: "elevation", widget: "string", hint: "Example: 219 m" }
+              - { label: "Moving Time", name: "time", widget: "string", hint: "Example: 1h 0m" }
+              - { label: "Card Image", name: "image", widget: "image", required: false }
+              - { label: "Chart Image", name: "chart", widget: "image", required: false }
+              - { label: "GPX File Path", name: "gpx", widget: "string", hint: "Example: adventures/gpx/ride_123.gpx" }
+              - { label: "YouTube URL", name: "youtube", widget: "string", required: false }
+              - { label: "Description", name: "description", widget: "text" }
+              - label: "Story Paragraphs"
+                name: "story"
+                widget: "list"
+                field: { label: "Paragraph", name: "paragraph", widget: "text" }
+
+      - name: "quotes"
+        label: "Hero Quotes"
+        file: "data/quotes.json"
+        format: "json"
+        fields:
+          - label: "Comment"
+            name: "_comment"
+            widget: "hidden"
+            default: "Hero quotes shown randomly on page load."
+          - label: "Quotes"
+            name: "quotes"
+            widget: "list"
+            summary: "{{fields.text}}"
+            fields:
+              - { label: "Quote Text", name: "text", widget: "text" }
+              - { label: "Author", name: "author", widget: "string", required: false }
+
+      - name: "testimonials"
+        label: "Testimonials"
+        file: "data/testimonials.json"
+        format: "json"
+        fields:
+          - label: "Comment"
+            name: "_comment"
+            widget: "hidden"
+            required: false
+          - label: "Testimonials"
+            name: "testimonials"
+            widget: "list"
+            summary: "{{fields.name}}"
+            fields:
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Text", name: "text", widget: "text" }
+              - { label: "Image", name: "image", widget: "image", required: false }
+              - label: "Social Links"
+                name: "socials"
+                widget: "object"
+                required: false
+                fields:
+                  - { label: "Facebook", name: "facebook", widget: "string", required: false }
+                  - { label: "YouTube", name: "youtube", widget: "string", required: false }
+                  - { label: "TikTok", name: "tiktok", widget: "string", required: false }

@@ -34,7 +34,7 @@ function renderSiteHeader() {
   header.innerHTML = `
     <div class="container header-inner">
       <a class="brand" href="${isHome ? "#top" : "index.html"}" aria-label="Pedal & Peak home">
-        <img src="assets/pedal-peak-logo.png" alt="Pedal & Peak logo" />
+        <img src="assets/pedal-peak-logo-transparent.png" alt="Pedal & Peak logo" />
         <span class="brand-text">
           <strong>Pedal & Peak</strong>
           <small>Cycling. Hiking. Adventure.</small>
@@ -319,112 +319,55 @@ function renderLeafletMap(container, track) {
   }).addTo(map);
   L.polyline(latLngs, { color: "#1E1D30", weight: 10, opacity: .68 }).addTo(map);
   L.polyline(latLngs, { color: "#D2ED69", weight: 6, opacity: 1 }).addTo(map);
-  map.fitBounds(latLngs, { padding: [18, 18] });
+  const fitRoute = () => map.fitBounds(latLngs, { padding: [52, 52], maxZoom: 14 });
+  fitRoute();
+  map.whenReady(() => {
+    map.invalidateSize();
+    fitRoute();
+  });
+  setTimeout(() => {
+    map.invalidateSize();
+    fitRoute();
+  }, 250);
 }
 
-// Finds the lowest and highest value for one chart metric.
-function getMetricRange(track, key) {
-  const values = track.map(point => point[key]).filter(Number.isFinite);
-  if (!values.length) return { min: 0, max: 1 };
+// Finds the average value for one GPX metric.
+function getAverageMetric(track, key) {
+  const values = track.map(point => point[key]).filter(value => Number.isFinite(value) && value > 0);
+  if (!values.length) return null;
 
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  return min === max ? { min: min - 1, max: max + 1 } : { min, max };
+  return values.reduce((sum, value) => sum + value, 0) / values.length;
 }
 
-// Converts one chart metric into SVG polyline points.
-function getMetricPolyline(track, key, width, height, padding) {
-  const range = getMetricRange(track, key);
-  const totalDistance = track[track.length - 1]?.distance || 1;
-  const chartPadding = typeof padding === "number"
-    ? { top: padding, right: padding, bottom: padding, left: padding }
-    : padding;
+// Adds GPX-derived speed, heart rate, and air temperature values to the compact stats panel.
+function updateAdventureMiniStats(track) {
+  const stats = document.querySelector(".adventure-mini-stats");
+  if (!stats || !track.length) return;
 
-  return track
-    .filter(point => Number.isFinite(point[key]))
-    .map(point => {
-      const x = chartPadding.left + (point.distance / totalDistance) * (width - chartPadding.left - chartPadding.right);
-      const y = height - chartPadding.bottom - ((point[key] - range.min) / (range.max - range.min)) * (height - chartPadding.top - chartPadding.bottom);
-      return `${x.toFixed(1)},${y.toFixed(1)}`;
-    })
-    .join(" ");
-}
-
-// Draws the detail-page chart with elevation, speed, heart rate, air temperature, and distance.
-function renderActivityMetricsChart(container, track) {
-  if (!track.length) return;
-
-  const width = 960;
-  const height = 220;
-  const padding = { top: 18, right: 24, bottom: 36, left: 54 };
-  const metrics = [
-    { key: "ele", color: "#E2572B", label: "Elevation", slug: "elevation" },
-    { key: "speed", color: "#D2ED69", label: "Speed", slug: "speed" },
-    { key: "heartRate", color: "#E0CDFF", label: "Heart rate", slug: "heart-rate" },
-    { key: "airTemp", color: "#FFE251", label: "Air temp", slug: "air-temp" },
-    { key: "distance", color: "#FDC2F5", label: "Distance", slug: "distance" }
+  const averageSpeed = getAverageMetric(track, "speed");
+  const averageHeartRate = getAverageMetric(track, "heartRate");
+  const averageAirTemp = getAverageMetric(track, "airTemp");
+  const metricItems = [
+    { value: averageSpeed == null ? "N/A" : `${averageSpeed.toFixed(1)} km/h`, label: "Avg Speed" },
+    { value: averageHeartRate == null ? "N/A" : `${Math.round(averageHeartRate)} bpm`, label: "Avg Heart Rate" },
+    { value: averageAirTemp == null ? "N/A" : `${Math.round(averageAirTemp)}°C`, label: "Avg Air Temp" }
   ];
-  const totalDistance = track[track.length - 1]?.distance || 0;
-  const elevationRange = getMetricRange(track, "ele");
-  const xTicks = [0, .25, .5, .75, 1].map(ratio => {
-    const x = padding.left + ratio * (width - padding.left - padding.right);
-    const label = `${(totalDistance * ratio).toFixed(totalDistance >= 10 ? 0 : 1)}km`;
-    return { x, label };
-  });
-  const yTicks = [0, .25, .5, .75, 1].map(ratio => {
-    const y = height - padding.bottom - ratio * (height - padding.top - padding.bottom);
-    const value = elevationRange.min + ratio * (elevationRange.max - elevationRange.min);
-    return { y, label: `${Math.round(value)}m` };
-  });
-  const grid = [
-    ...xTicks.map(tick => `<line x1="${tick.x.toFixed(1)}" y1="${padding.top}" x2="${tick.x.toFixed(1)}" y2="${height - padding.bottom}" stroke="currentColor" opacity=".08"></line>`),
-    ...yTicks.map(tick => `<line x1="${padding.left}" y1="${tick.y.toFixed(1)}" x2="${width - padding.right}" y2="${tick.y.toFixed(1)}" stroke="currentColor" opacity=".08"></line>`)
-  ].join("");
-  const labels = [
-    ...xTicks.map(tick => `<text x="${tick.x.toFixed(1)}" y="${height - 10}" text-anchor="middle">${tick.label}</text>`),
-    ...yTicks.map(tick => `<text x="${padding.left - 10}" y="${(tick.y + 4).toFixed(1)}" text-anchor="end">${tick.label}</text>`)
-  ].join("");
-  const lines = metrics.map(metric => {
-    const points = getMetricPolyline(track, metric.key, width, height, padding);
-    if (!points) return "";
-    return `<polyline class="metric-line metric-${metric.slug}" data-metric="${metric.slug}" points="${points}" fill="none" stroke="${metric.color}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><title>${metric.label}</title></polyline>`;
-  }).join("");
 
-  container.innerHTML = `
-    <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-hidden="true">
-      <rect x="0" y="0" width="${width}" height="${height}" rx="8" fill="currentColor" opacity=".04"></rect>
-      <g class="chart-grid">${grid}</g>
-      <line x1="${padding.left}" y1="${height - padding.bottom}" x2="${width - padding.right}" y2="${height - padding.bottom}" stroke="currentColor" opacity=".28"></line>
-      <line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${height - padding.bottom}" stroke="currentColor" opacity=".28"></line>
-      ${lines}
-      <g class="chart-axis-labels">${labels}</g>
-    </svg>
-  `;
-}
-
-// Lets the user show or hide each chart line by clicking the legend buttons.
-function initMetricToggles(container) {
-  const toggles = container.querySelectorAll(".metric-toggle");
-  const chart = container.querySelector(".detail-elevation-chart");
-
-  toggles.forEach(toggle => {
-    toggle.addEventListener("click", () => {
-      const metric = toggle.dataset.metric;
-      const line = chart?.querySelector(`[data-metric="${metric}"]`);
-      const willShow = !toggle.classList.contains("is-active");
-
-      toggle.classList.toggle("is-active", willShow);
-      toggle.setAttribute("aria-pressed", String(willShow));
-      line?.classList.toggle("is-hidden", !willShow);
-    });
-
-    toggle.setAttribute("aria-pressed", "true");
+  metricItems.forEach(item => {
+    stats.insertAdjacentHTML("beforeend", `<span><strong>${item.value}</strong><small>${item.label}</small></span>`);
   });
 }
 
 // Builds the HTML for the activity photo carousel and delays loading hidden images.
 function renderActivityImageCarousel(images = [], title = "Adventure") {
-  if (!Array.isArray(images) || images.length === 0) return "";
+  if (!Array.isArray(images) || images.length === 0) {
+    return `
+      <section class="activity-carousel is-empty" aria-label="${title} photo carousel">
+        <div class="activity-carousel-viewport"></div>
+        <div class="activity-carousel-dots" aria-hidden="true"></div>
+      </section>
+    `;
+  }
 
   const slides = images.map((src, index) => `
     <figure class="activity-slide ${index === 0 ? "is-active" : ""}" data-slide-index="${index}">
@@ -439,8 +382,8 @@ function renderActivityImageCarousel(images = [], title = "Adventure") {
     <section class="activity-carousel" aria-label="${title} photo carousel">
       <div class="activity-carousel-viewport">
         ${slides}
-        <button class="activity-carousel-button activity-carousel-prev" type="button" aria-label="Previous photo">Previous</button>
-        <button class="activity-carousel-button activity-carousel-next" type="button" aria-label="Next photo">Next</button>
+        <button class="activity-carousel-button activity-carousel-prev" type="button" aria-label="Previous photo">&lt;</button>
+        <button class="activity-carousel-button activity-carousel-next" type="button" aria-label="Next photo">&gt;</button>
       </div>
       <div class="activity-carousel-dots" aria-label="Photo carousel navigation">${dots}</div>
     </section>
@@ -450,7 +393,7 @@ function renderActivityImageCarousel(images = [], title = "Adventure") {
 // Adds previous/next/dot controls to the activity image carousel.
 function initActivityImageCarousel(container) {
   const carousel = container.querySelector(".activity-carousel");
-  if (!carousel) return;
+  if (!carousel || carousel.classList.contains("is-empty")) return;
 
   const slides = Array.from(carousel.querySelectorAll(".activity-slide"));
   const dots = Array.from(carousel.querySelectorAll(".activity-carousel-dot"));
@@ -520,8 +463,8 @@ function getActivityImages(data, activityId) {
   return Array.isArray(data?.activities?.[activityId]) ? data.activities[activityId] : [];
 }
 
-// Converts a normal YouTube URL into an embeddable iframe URL.
-function getYoutubeEmbedUrl(videoUrl) {
+// Gets the YouTube video ID from a normal YouTube link.
+function getYoutubeVideoId(videoUrl) {
   if (!videoUrl) return "";
 
   try {
@@ -542,25 +485,74 @@ function getYoutubeEmbedUrl(videoUrl) {
     }
 
     if (!/^[a-zA-Z0-9_-]{11}$/.test(videoId)) return "";
-    return `https://www.youtube.com/embed/${videoId}?rel=0&playsinline=1`;
+    return videoId;
   } catch {
     return "";
   }
 }
 
+// Converts a normal YouTube URL into an embeddable iframe URL.
+function getYoutubeEmbedUrl(videoUrl) {
+  const videoId = getYoutubeVideoId(videoUrl);
+  return videoId ? `https://www.youtube.com/embed/${videoId}?rel=0&playsinline=1&autoplay=1` : "";
+}
+
+// Keeps text safe when used inside an HTML attribute.
+function escapeAttribute(value = "") {
+  return String(value).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
 // Builds the optional embedded YouTube video block for an adventure detail page.
 function renderAdventureVideo(videoUrl, title) {
   const embedUrl = getYoutubeEmbedUrl(videoUrl);
-  if (!embedUrl) return "";
-  const safeVideoUrl = videoUrl.replace(/"/g, "&quot;");
+  const videoId = getYoutubeVideoId(videoUrl);
+  if (!embedUrl) {
+    return `
+      <div class="adventure-video is-empty">
+        <p class="chart-label">Ride video</p>
+        <div class="youtube-frame"></div>
+      </div>
+    `;
+  }
 
   return `
     <div class="adventure-video">
       <p class="chart-label">Ride video</p>
-      <div class="youtube-frame">
-        <iframe src="${embedUrl}" title="${title} video" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-      </div>
-      <a class="youtube-fallback-link" href="${safeVideoUrl}" target="_blank" rel="noopener">Open video on YouTube</a>
+      <button class="youtube-frame youtube-lite" type="button" data-youtube-embed="${escapeAttribute(embedUrl)}" data-youtube-title="${escapeAttribute(`${title} video`)}" aria-label="Play ${escapeAttribute(title)} video">
+        <img src="https://img.youtube.com/vi/${videoId}/hqdefault.jpg" alt="" loading="lazy" decoding="async" aria-hidden="true" />
+        <span class="youtube-play-button" aria-hidden="true"></span>
+      </button>
+    </div>
+  `;
+}
+
+// Replaces the rounded thumbnail with the real YouTube iframe after the visitor clicks play.
+function initYoutubeEmbeds(container) {
+  container.querySelectorAll(".youtube-lite").forEach(button => {
+    button.addEventListener("click", () => {
+      const frame = document.createElement("div");
+      const iframe = document.createElement("iframe");
+      frame.className = "youtube-frame is-loaded";
+      iframe.src = button.dataset.youtubeEmbed;
+      iframe.title = button.dataset.youtubeTitle || "YouTube video";
+      iframe.loading = "lazy";
+      iframe.referrerPolicy = "strict-origin-when-cross-origin";
+      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+      iframe.allowFullscreen = true;
+      frame.appendChild(iframe);
+      button.replaceWith(frame);
+    }, { once: true });
+  });
+}
+
+// Builds a compact stats panel for the activity detail page.
+function renderAdventureMiniStats(adventure) {
+  return `
+    <div class="adventure-mini-stats" aria-label="Activity summary">
+      <span><strong>${adventure.date}</strong><small>Date</small></span>
+      <span><strong>${adventure.distance}</strong><small>Distance</small></span>
+      <span><strong>${adventure.elevation}</strong><small>Elevation</small></span>
+      <span><strong>${adventure.time}</strong><small>Moving Time</small></span>
     </div>
   `;
 }
@@ -575,58 +567,46 @@ function renderAdventureStory(adventure) {
     ];
 
   return `
-    <article class="adventure-story-card">
+    <section class="adventure-story-panel">
       <p class="eyebrow">Story</p>
       <h2>The day on the route</h2>
       ${paragraphs.map(paragraph => `<p>${paragraph}</p>`).join("")}
-    </article>
+    </section>
   `;
 }
 
 // Builds the full ride/hike detail page: text, video, map, chart, and photo carousel.
 function renderAdventureDetail(adventure, container, activityImages = []) {
+  container.classList.add("activity-detail-layout");
+  container.closest(".simple-page")?.classList.add("activity-page");
   container.innerHTML = `
     <article class="adventure-detail-card">
       <div class="adventure-detail-copy">
         <p class="eyebrow">${adventure.type}</p>
         <h1>${adventure.title}</h1>
         <p>${adventure.description}</p>
-        <div class="adventure-detail-meta">
-          <span>${adventure.date}</span>
-          <span>${adventure.distance}</span>
-          <span>${adventure.elevation} gain</span>
-          <span>${adventure.time}</span>
+        ${renderActivityImageCarousel(activityImages, adventure.title)}
+        <div class="adventure-narrative-grid has-no-video">
+          ${renderAdventureStory(adventure)}
         </div>
       </div>
       <div class="adventure-detail-media">
-        ${renderAdventureVideo(adventure.youtube, adventure.title)}
+        ${renderAdventureMiniStats(adventure)}
         <div class="detail-map" id="detailMap"></div>
-        <div>
-          <p class="chart-label">Activity metrics from GPX</p>
-          <div class="metric-legend" aria-label="Chart legend">
-            <button class="metric-toggle is-active" type="button" data-metric="elevation"><i class="legend-elevation"></i>Elevation</button>
-            <button class="metric-toggle is-active" type="button" data-metric="speed"><i class="legend-speed"></i>Speed</button>
-            <button class="metric-toggle is-active" type="button" data-metric="heart-rate"><i class="legend-heart-rate"></i>Heart rate</button>
-            <button class="metric-toggle is-active" type="button" data-metric="air-temp"><i class="legend-air-temp"></i>Air temp</button>
-            <button class="metric-toggle is-active" type="button" data-metric="distance"><i class="legend-distance"></i>Distance</button>
-          </div>
-          <div class="detail-elevation-chart elevation-chart" id="detailElevationChart" role="img" aria-label="Elevation profile"></div>
-        </div>
+        ${renderAdventureVideo(adventure.youtube, adventure.title)}
       </div>
     </article>
-    ${renderAdventureStory(adventure)}
-    ${renderActivityImageCarousel(activityImages, adventure.title)}
   `;
 
   initActivityImageCarousel(container);
+  initYoutubeEmbeds(container);
 
   if (!adventure.gpx) return;
 
   loadGpxTrack(adventure.gpx)
     .then(track => {
       renderLeafletMap(document.getElementById("detailMap"), track);
-      renderActivityMetricsChart(document.getElementById("detailElevationChart"), track);
-      initMetricToggles(container);
+      updateAdventureMiniStats(track);
     })
     .catch(() => {
       const map = document.getElementById("detailMap");
