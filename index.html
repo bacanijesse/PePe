@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pedal & Peak — Cycling. Hiking. Adventure.</title>
+  <meta name="description" content="Pedal & Peak is Jesse's cycling and hiking adventure site with rides, hikes, maps, stats, and stories." />
+  <link rel="icon" href="assets/pedal-peak-logo.png" type="image/png" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="has-page-bg bg-priority" data-bg="assets/images/herobg.webp">
+  <!-- Shared header placeholder: script.js replaces this with the fixed navigation bar used across the site. -->
+  <div id="siteHeader"></div>
+
+  <!-- Main content: this holds the important homepage sections visitors came to see. -->
+  <main>
+    <!-- Hero section: the big first screen that introduces the site and gives two main action buttons. -->
+    <section class="hero" aria-label="Pedal and Peak intro">
+      <div class="hero-overlay"></div>
+      <div class="container hero-content">
+        <div class="hero-copy">
+          <p class="eyebrow">Adventure journal by Jesse</p>
+          <h1>Pedal & Peak<span>.</span></h1>
+          <p class="hero-lead">Documenting rides, hikes, and adventures.<br />One climb, one trail, one story at a time.</p>
+          <div class="hero-buttons">
+            <a class="btn btn-primary" href="rides.html">△ View Rides</a>
+            <a class="btn btn-secondary" href="hikes.html">♙ View Hikes</a>
+          </div>
+        </div>
+
+        <blockquote class="hero-quote">
+          <span id="heroQuoteText">“The best views come after the hardest climbs.”</span>
+          <cite id="heroQuoteAuthor">Jesse</cite>
+        </blockquote>
+
+        <!-- Stats bar: quick numbers that summarize the rides, hikes, distance, elevation, and time. -->
+        <div class="hero-stats" aria-label="Adventure statistics">
+          <div class="stats-bar">
+            <article class="stat-item"><div class="stat-icon">🚴</div><div><strong id="totalRides">0 <small class="stat-value-unit">Rides</small></strong><span>Logged</span></div></article>
+            <article class="stat-item"><div class="stat-icon">⛰</div><div><strong id="totalHikes">0 <small class="stat-value-unit">Hikes</small></strong><span>Completed</span></div></article>
+            <article class="stat-item"><div class="stat-icon">📍</div><div><strong id="totalDistance">0 <small class="stat-value-unit">km</small></strong><span>Ridden</span></div></article>
+            <article class="stat-item"><div class="stat-icon">↗</div><div><strong id="totalElevation">0 <small class="stat-value-unit">m</small></strong><span>Elevation Gain</span></div></article>
+            <article class="stat-item"><div class="stat-icon">⏱</div><div><strong id="totalTime">0 <small class="stat-value-unit">m</small></strong><span>Moving Time</span></div></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Adventures section: this area shows ride and hike cards loaded by JavaScript from the data file. -->
+    <section class="adventures-section" id="Adventures">
+      <div class="container">
+        <div class="section-title-row">
+          <div>
+            <h2>Latest Adventures</h2>
+            <div class="accent-line"></div>
+          </div>
+          <div class="filter-buttons" aria-label="Filter adventure cards">
+            <button class="filter active" data-filter="all">All</button>
+            <button class="filter" data-filter="ride">Rides</button>
+            <button class="filter" data-filter="hike">Hikes</button>
+          </div>
+        </div>
+
+        <div class="card-grid" id="cardGrid"></div>
+      </div>
+    </section>
+
+    <!-- Testimonials section: this carousel shows one story card at a time. -->
+    <section class="info-section" id="Testimonials">
+      <div class="container">
+        <div class="section-title-row">
+          <div>
+            <h2>Stories from the route</h2>
+            <div class="accent-line"></div>
+          </div>
+        </div>
+
+        <div class="info-grid testimonial-carousel" id="testimonialCarousel" aria-live="polite"></div>
+
+        <div class="carousel-controls" aria-label="Testimonials carousel controls">
+          <button class="carousel-button" id="testimonialPrev" type="button" aria-label="Previous testimonials">Previous</button>
+          <span class="carousel-page" id="testimonialPage">Page 1 of 1</span>
+          <button class="carousel-button" id="testimonialNext" type="button" aria-label="Next testimonials">Next</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact section: a simple form where visitors can type their name, email, and message. -->
+    <section class="contact-section" id="contact">
+      <div class="container contact-card">
+        <div>
+          <p class="eyebrow">Contact</p>
+          <h2>Ride, hike, or collaborate?</h2>
+          <p>Send a message for shared adventures, route ideas, or cycling and hiking content. Adventure is better shared — especially when the climb starts hurting.</p>
+          <p class="privacy-removal-notice"><strong>Photo privacy request:</strong> If you see yourself in any photo on this website and would like it removed for privacy reasons, please contact me using this form. Include the page link or image URL so I can identify and remove it as soon as possible.</p>
+        </div>
+        <form class="contact-form" id="contactForm">
+          <label>Name<input required name="name" placeholder="Your name"></label>
+          <label>Email<input required type="email" name="email" placeholder="your@email.com"></label>
+          <label>Message<textarea required name="message" placeholder="Write your message..."></textarea></label>
+          <button class="btn btn-primary" type="submit">Send message</button>
+          <p class="form-note" id="formNote"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer section: the bottom bar with location, motto, copyright, and extra links. -->
+  <div id="siteFooter"></div>
+
+  <!-- Card template: JavaScript copies this hidden card shape to create each adventure card. -->
+  <template id="cardTemplate">
+    <article class="adventure-card">
+      <a class="card-button" href="#">
+        <div class="card-image-wrap">
+          <img class="card-image" src="" alt="" />
+          <div class="card-map" aria-hidden="true"></div>
+          <span class="badge"></span>
+          <span class="date-badge"></span>
+        </div>
+        <div class="card-body">
+          <h3></h3>
+          <p class="card-description"></p>
+          <div class="meta-row">
+            <span class="distance"></span>
+            <span class="elevation"></span>
+            <span class="time"></span>
+          </div>
+        </div>
+      </a>
+    </article>
+  </template>
+
+  <!-- Testimonial template: JavaScript copies this card for each person in data/testimonials.json. -->
+  <template id="testimonialTemplate">
+    <article class="testimonial-card">
+      <div class="testimonial-header">
+        <div>
+          <p class="eyebrow testimonial-name"></p>
+          <h2 class="testimonial-title"></h2>
+        </div>
+        <div class="testimonial-image-box">
+          <img class="testimonial-image" src="" alt="" />
+        </div>
+      </div>
+      <p class="testimonial-text"></p>
+      <div class="social-icons" aria-label="Social links"></div>
+    </article>
+  </template>
+
+  <!-- Leaflet powers GPX map previews on adventure cards that include a gpx file. -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Script file: this connects the buttons, filters, cards, maps, quotes, stats, and contact form behavior. -->
+  <script src="script.js"></script>
+</body>
+</html>

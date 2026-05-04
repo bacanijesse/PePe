@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 240" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="leafFade" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#D2ED69" stop-opacity="0"/>
+      <stop offset=".42" stop-color="#7CA942" stop-opacity=".34"/>
+      <stop offset="1" stop-color="#21451F" stop-opacity=".52"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="240" fill="url(#leafFade)"/>
+  <g fill="#21451F" opacity=".62">
+    <path d="M0 240h1600v-44c-58-14-114-19-166-14-45-35-93-51-145-42-35 6-66 25-96 47-57-45-121-65-188-49-43 10-80 34-118 61-72-35-143-39-214-12-46-30-97-42-152-29-42 10-76 35-111 61-69-44-139-55-210-22-58-34-123-42-200-17z"/>
+  </g>
+  <g fill="#356A2D" opacity=".86">
+    <path d="M84 240V102l-55 82h38l-35 56zm114 0V78l-66 101h44l-39 61zm128 0V112l-51 77h35l-31 51zm154 0V74l-68 104h45l-43 62zm126 0V120l-48 72h33l-29 48zm151 0V84l-64 98h42l-38 58zm117 0V126l-46 68h31l-27 46zm169 0V72l-70 106h46l-42 62zm136 0V116l-52 78h35l-32 46zm154 0V82l-64 99h43l-39 59zm134 0V128l-45 66h30l-26 46zm112 0V98l-57 86h38l-34 56z"/>
+  </g>
+  <g fill="#D2ED69" opacity=".86">
+    <ellipse cx="70" cy="164" rx="24" ry="12" transform="rotate(-22 70 164)"/>
+    <ellipse cx="144" cy="124" rx="28" ry="13" transform="rotate(28 144 124)"/>
+    <ellipse cx="238" cy="176" rx="23" ry="12" transform="rotate(-34 238 176)"/>
+    <ellipse cx="384" cy="134" rx="31" ry="14" transform="rotate(25 384 134)"/>
+    <ellipse cx="512" cy="178" rx="26" ry="13" transform="rotate(-28 512 178)"/>
+    <ellipse cx="648" cy="138" rx="28" ry="13" transform="rotate(31 648 138)"/>
+    <ellipse cx="782" cy="184" rx="25" ry="12" transform="rotate(-24 782 184)"/>
+    <ellipse cx="930" cy="130" rx="32" ry="15" transform="rotate(23 930 130)"/>
+    <ellipse cx="1068" cy="178" rx="25" ry="12" transform="rotate(-30 1068 178)"/>
+    <ellipse cx="1210" cy="138" rx="30" ry="14" transform="rotate(28 1210 138)"/>
+    <ellipse cx="1350" cy="182" rx="26" ry="13" transform="rotate(-28 1350 182)"/>
+    <ellipse cx="1490" cy="132" rx="31" ry="14" transform="rotate(24 1490 132)"/>
+  </g>
+  <g fill="#FFE251" opacity=".62">
+    <circle cx="184" cy="168" r="6"/>
+    <circle cx="584" cy="146" r="7"/>
+    <circle cx="1018" cy="162" r="6"/>
+    <circle cx="1412" cy="152" r="7"/>
+  </g>
+</svg>

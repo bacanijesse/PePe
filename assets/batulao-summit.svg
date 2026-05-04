@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+      <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#acc9e3"/>
+          <stop offset="1" stop-color="#2b3c2f"/>
+        </linearGradient>
+      </defs>
+      <rect width="800" height="500" fill="url(#g)"/>
+      <circle cx="650" cy="80" r="52" fill="#fff2a8" opacity=".65"/>
+      <path d="M0 360 L220 125 L360 260 L505 85 L800 360 Z" fill="#223a28" opacity=".92"/><path d="M415 160 L505 85 L590 175" fill="#d8e2d2" opacity=".8"/><circle cx="585" cy="104" r="22" fill="#101010"/><path d="M585 126 l0 55 M555 160 l60 0 M585 181 l-28 55 M585 181 l30 55" stroke="#101010" stroke-width="14" fill="none" stroke-linecap="round"/>
+      <rect y="360" width="800" height="140" fill="#f8f8f8"/>
+      <text x="38" y="425" font-family="Arial" font-size="42" font-weight="700" fill="#111">Mt. Batulao Summit</text>
+    </svg>

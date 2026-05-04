@@ -1,0 +1,60 @@
+{
+  "_comment": "Testimonial carousel data for the homepage. Each item controls the displayed person/name, story text, avatar image, and social links.",
+  "testimonials": [
+    {
+    "name": "Alex Rivera",
+    "title": "Tagaytay Loop",
+    "text": "The climb was steady, the air was cool, and the view made every hard pedal worth it.",
+    "image": "assets/avatar.svg",
+    "socials": {
+      "facebook": "https://facebook.com/",
+      "youtube": "https://youtube.com/",
+      "tiktok": "https://tiktok.com/"
+    }
+  },
+  {
+    "name": "Mika Santos",
+    "title": "Mt. Batulao Summit",
+    "text": "The trail had sharp ridgelines and a summit view that felt like a proper reward.",
+    "image": "assets/avatar.svg",
+    "socials": {
+      "facebook": "https://facebook.com/",
+      "youtube": "https://youtube.com/",
+      "tiktok": "https://tiktok.com/"
+    }
+  },
+  {
+    "name": "Jon Cruz",
+    "title": "Nasugbu Coastal Ride",
+    "text": "Long roads, sea breeze, and good pacing made this one of the smoothest rides.",
+    "image": "assets/avatar.svg",
+    "socials": {
+      "facebook": "https://facebook.com/",
+      "youtube": "https://youtube.com/",
+      "tiktok": "https://tiktok.com/"
+    }
+  },
+  {
+    "name": "Rae Lim",
+    "title": "Pagsanjan Loop",
+    "text": "Quiet roads and forest views made the ride feel calm even when the legs were tired.",
+    "image": "assets/avatar.svg",
+    "socials": {
+      "facebook": "https://facebook.com/",
+      "youtube": "https://youtube.com/",
+      "tiktok": "https://tiktok.com/"
+    }
+  },
+  {
+    "name": "Leo Tan",
+    "title": "Tagaytay Loop",
+    "text": "The climb was steady, the air was cool, and the view made every hard pedal worth it.",
+    "image": "assets/avatar.svg",
+    "socials": {
+      "facebook": "https://facebook.com/",
+      "youtube": "https://youtube.com/",
+      "tiktok": "https://tiktok.com/"
+    }
+    }
+  ]
+}

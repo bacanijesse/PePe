@@ -1,0 +1,25 @@
+{
+  "_comment": "Hero quote pool. One quote is selected randomly on each homepage load.",
+  "quotes": [
+    {
+    "text": "The best views come after the hardest climbs.",
+    "author": "Jesse"
+  },
+  {
+    "text": "A long road feels lighter when the next turn still feels possible.",
+    "author": "Pedal & Peak"
+  },
+  {
+    "text": "Every climb starts with one stubborn pedal stroke.",
+    "author": "Pedal & Peak"
+  },
+  {
+    "text": "Trails do not ask for speed. They ask you to keep showing up.",
+    "author": "Pedal & Peak"
+  },
+  {
+    "text": "Some days the summit is the view. Some days it is just not quitting.",
+    "author": "Pedal & Peak"
+    }
+  ]
+}

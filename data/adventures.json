@@ -1,0 +1,41 @@
+﻿{
+    "_comment":  "Generated from adventures/gpx by tools/update-adventures.ps1. Static browsers cannot scan GPX folders directly, so the site loads adventure cards from this file.",
+    "adventures":  [
+                       {
+                           "title":  "Hukou Township Mountain Biking",
+                           "type":  "ride",
+                           "date":  "Feb 18, 2026",
+                           "distance":  "4.2 km",
+                           "elevation":  "44 m",
+                           "time":  "16m",
+                           "image":  "assets/hero-bike-road.svg",
+                           "chart":  "assets/chart-green.svg",
+                           "gpx":  "adventures/gpx/ride_21904385848.gpx",
+                           "youtube":  "https://youtu.be/vO_iSUUSiB0?si=WlL8VYPmN9XxKUvx",
+                           "story":  [
+                                         "This ride is the first sample story for Pedal \u0026 Peak. For now, it uses the GPX file, placeholder images, and a basic route summary so the page can be designed before the real outdoor content is collected.",
+                                         "The route feels like a short test ride: enough movement to show distance, elevation, moving time, map data, and the activity chart, but still simple enough to use while building the site. Later, this paragraph can describe the actual weather, road condition, climb difficulty, scenery, and what made the day memorable.",
+                                         "When the real ride story is ready, this section should answer the questions a visitor naturally has: where the ride started, how hard it felt, what to watch out for, what gear helped, and whether the route is worth doing again."
+                                     ],
+                           "description":  "A short Garmin-recorded mountain bike activity around Hukou Township with a compact climb and quick moving time."
+                       },
+                       {
+                           "title":  "Ride 21906513266",
+                           "type":  "ride",
+                           "date":  "Feb 18, 2026",
+                           "distance":  "12.8 km",
+                           "elevation":  "219 m",
+                           "time":  "1h 0m",
+                           "image":  "assets/hero-bike-road.svg",
+                           "chart":  "assets/chart-green.svg",
+                           "gpx":  "adventures/gpx/ride_21906513266.gpx",
+                           "youtube":  "",
+                           "story":  [
+                                         "This is an auto-generated starter story for activity_21906513266. It was created from the GPX file so the card and detail page can exist before the real photos, videos, and written notes are ready.",
+                                         "Replace this text later with the real story of the route: where it started, how the ride or hike felt, what the weather was like, what surprised you, and what another visitor should know before trying it.",
+                                         "The map, chart, distance, elevation, and moving time already come from the GPX file. This story section is where the human part of the adventure will live."
+                                     ],
+                           "description":  "Auto-generated from adventures/gpx/ride_21906513266.gpx. Replace this with a short summary when the real story is ready."
+                       }
+                   ]
+}
