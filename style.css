@@ -1630,7 +1630,7 @@ body.dark-mode .adventure-mini-stats strong {
 
 .detail-chart-y-max,
 .detail-chart-y-min {
-  text-anchor: end;
+  text-anchor: start;
 }
 
 .detail-chart-x-max {

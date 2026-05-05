@@ -405,8 +405,8 @@ function renderMetricChart(track, { key, title, unit = "", onlyPositive = false,
       <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${title} chart">
         <line class="detail-chart-axis" x1="${padding}" y1="${padding}" x2="${padding}" y2="${axisBottom}"></line>
         <line class="detail-chart-axis" x1="${padding}" y1="${axisBottom}" x2="${width - padding}" y2="${axisBottom}"></line>
-        <text class="detail-chart-axis-label detail-chart-y-max" x="${padding - 6}" y="${padding + 4}">${formatValue(maxValue)}</text>
-        <text class="detail-chart-axis-label detail-chart-y-min" x="${padding - 6}" y="${axisBottom - 2}">${formatValue(minValue)}</text>
+        <text class="detail-chart-axis-label detail-chart-y-max" x="${padding + 6}" y="${padding + 4}">${formatValue(maxValue)}</text>
+        <text class="detail-chart-axis-label detail-chart-y-min" x="${padding + 6}" y="${axisBottom - 2}">${formatValue(minValue)}</text>
         <text class="detail-chart-axis-label" x="${padding}" y="${height - 6}">${formatDistance(minDistance)}</text>
         <text class="detail-chart-axis-label detail-chart-x-max" x="${width - padding}" y="${height - 6}">${formatDistance(maxDistance)}</text>
         <polygon points="${areaPoints}" opacity=".22"></polygon>
