@@ -16,7 +16,7 @@ function homeLink(hash) {
 const pageInfo = getPageInfo();
 const shouldResetHomeOnLoad = pageInfo.isHome && !window.location.hash;
 const siteBaseUrl = new URL(".", document.baseURI);
-const dataVersion = "20260505-13";
+const dataVersion = "20260505-14";
 
 if (shouldResetHomeOnLoad && "scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -676,7 +676,14 @@ function syncAdventureDetailHeight(container) {
       return;
     }
 
-    const columnHeight = Math.ceil(copy.getBoundingClientRect().height);
+    const visibleCopyChildren = Array.from(copy.children).filter(child => {
+      const rect = child.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0;
+    });
+    const copyRect = copy.getBoundingClientRect();
+    const finalCopyChild = visibleCopyChildren[visibleCopyChildren.length - 1];
+    const finalCopyRect = finalCopyChild?.getBoundingClientRect();
+    const columnHeight = Math.ceil(finalCopyRect ? finalCopyRect.bottom - copyRect.top : copyRect.height);
     const rowGap = parseFloat(getComputedStyle(media).rowGap || getComputedStyle(media).gap) || 0;
     const videoFrame = video?.querySelector(".youtube-frame");
     const videoFallbackHeight = video ? Math.ceil((media.getBoundingClientRect().width * 9 / 16) + 34) : 0;
