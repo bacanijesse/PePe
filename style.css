@@ -1343,7 +1343,7 @@ body.dark-mode .site-footer {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  gap: clamp(16px, 2vw, 24px);
+  gap: clamp(14px, 1.7vw, 22px);
 }
 
 .adventure-detail-copy h1 {
@@ -1436,8 +1436,8 @@ body.dark-mode .site-footer {
 
 .adventure-mini-stats {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(2, minmax(120px, 180px));
+  gap: 10px;
   align-self: start;
   align-content: start;
 }
@@ -1448,14 +1448,14 @@ body.dark-mode .site-footer {
   min-height: 0;
   align-content: center;
   border: 1px solid var(--line);
-  border-radius: 16px;
-  background: var(--page);
-  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.18);
+  padding: 10px 12px;
 }
 
 .adventure-mini-stats strong {
   color: #255C1F;
-  font-size: clamp(18px, 1.3vw, 26px);
+  font-size: clamp(17px, 1.15vw, 22px);
   line-height: 1;
 }
 
@@ -1464,7 +1464,7 @@ body.dark-mode .site-footer {
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: .04em;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 body.dark-mode .adventure-mini-stats strong {
@@ -1600,19 +1600,41 @@ body.dark-mode .adventure-mini-stats strong {
 
 .detail-chart-card svg {
   width: 100%;
-  height: clamp(86px, 9vh, 118px);
-  color: var(--green);
+  height: clamp(112px, 11vh, 146px);
+  color: #8dbb11;
 }
 
 .detail-chart-card polygon {
   fill: currentColor;
+  opacity: .3;
 }
 
 .detail-chart-card polyline {
   stroke: currentColor;
-  stroke-width: 5;
+  stroke-width: 6;
   stroke-linecap: round;
   stroke-linejoin: round;
+  filter: drop-shadow(0 2px 0 rgba(37, 92, 31, .14));
+}
+
+.detail-chart-axis {
+  stroke: rgba(30, 29, 48, .46);
+  stroke-width: 1.5;
+}
+
+.detail-chart-axis-label {
+  fill: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.detail-chart-y-max,
+.detail-chart-y-min {
+  text-anchor: end;
+}
+
+.detail-chart-x-max {
+  text-anchor: end;
 }
 
 .detail-chart-meta {
@@ -1623,6 +1645,14 @@ body.dark-mode .adventure-mini-stats strong {
 
 body.dark-mode .detail-chart-heading strong {
   color: var(--green);
+}
+
+body.dark-mode .detail-chart-card svg {
+  color: var(--green);
+}
+
+body.dark-mode .detail-chart-axis {
+  stroke: rgba(255, 253, 248, .46);
 }
 
 .activity-carousel {
@@ -1793,12 +1823,11 @@ body.dark-mode .detail-chart-heading strong {
   }
 
   .adventure-mini-stats span {
-    min-height: 56px;
     padding: 8px 10px;
   }
 
   .adventure-mini-stats strong {
-    font-size: clamp(19px, 1.35vw, 27px);
+    font-size: clamp(17px, 1.1vw, 22px);
   }
 
   .adventure-mini-stats small {

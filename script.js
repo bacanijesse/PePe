@@ -362,25 +362,6 @@ function getAverageMetric(track, key) {
   return values.reduce((sum, value) => sum + value, 0) / values.length;
 }
 
-// Adds GPX-derived speed, heart rate, and air temperature values to the compact stats panel.
-function updateAdventureMiniStats(track) {
-  const stats = document.querySelector(".adventure-mini-stats");
-  if (!stats || !track.length) return;
-
-  const averageSpeed = getAverageMetric(track, "speed");
-  const averageHeartRate = getAverageMetric(track, "heartRate");
-  const averageAirTemp = getAverageMetric(track, "airTemp");
-  const metricItems = [
-    { value: averageSpeed == null ? "N/A" : `${averageSpeed.toFixed(1)} km/h`, label: "Avg Speed" },
-    { value: averageHeartRate == null ? "N/A" : `${Math.round(averageHeartRate)} bpm`, label: "Avg Heart Rate" },
-    { value: averageAirTemp == null ? "N/A" : `${Math.round(averageAirTemp)}°C`, label: "Avg Air Temp" }
-  ];
-
-  metricItems.forEach(item => {
-    stats.insertAdjacentHTML("beforeend", `<span><strong>${item.value}</strong><small>${item.label}</small></span>`);
-  });
-}
-
 function getMetricValues(track, key, onlyPositive = false) {
   return track
     .map(point => ({
@@ -395,8 +376,9 @@ function renderMetricChart(track, { key, title, unit = "", onlyPositive = false,
   if (values.length < 2) return "";
 
   const width = 360;
-  const height = 120;
-  const padding = 12;
+  const height = 140;
+  const padding = 28;
+  const bottomPadding = 26;
   const minDistance = values[0].distance;
   const maxDistance = values[values.length - 1].distance || 1;
   const rawValues = values.map(point => point.value);
@@ -405,12 +387,14 @@ function renderMetricChart(track, { key, title, unit = "", onlyPositive = false,
   const valueRange = maxValue - minValue || 1;
   const distanceRange = maxDistance - minDistance || 1;
   const formatValue = value => `${value.toFixed(precision)}${unit}`;
+  const formatDistance = value => `${value.toFixed(value >= 10 ? 0 : 1)} km`;
   const points = values.map(point => {
     const x = padding + ((point.distance - minDistance) / distanceRange) * (width - padding * 2);
-    const y = height - padding - ((point.value - minValue) / valueRange) * (height - padding * 2);
+    const y = height - bottomPadding - ((point.value - minValue) / valueRange) * (height - padding - bottomPadding);
     return `${x.toFixed(1)},${y.toFixed(1)}`;
   }).join(" ");
-  const areaPoints = `${padding},${height - padding} ${points} ${width - padding},${height - padding}`;
+  const axisBottom = height - bottomPadding;
+  const areaPoints = `${padding},${axisBottom} ${points} ${width - padding},${axisBottom}`;
 
   return `
     <article class="detail-chart-card">
@@ -419,6 +403,12 @@ function renderMetricChart(track, { key, title, unit = "", onlyPositive = false,
         <strong>${formatValue(maxValue)}</strong>
       </div>
       <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${title} chart">
+        <line class="detail-chart-axis" x1="${padding}" y1="${padding}" x2="${padding}" y2="${axisBottom}"></line>
+        <line class="detail-chart-axis" x1="${padding}" y1="${axisBottom}" x2="${width - padding}" y2="${axisBottom}"></line>
+        <text class="detail-chart-axis-label detail-chart-y-max" x="${padding - 6}" y="${padding + 4}">${formatValue(maxValue)}</text>
+        <text class="detail-chart-axis-label detail-chart-y-min" x="${padding - 6}" y="${axisBottom - 2}">${formatValue(minValue)}</text>
+        <text class="detail-chart-axis-label" x="${padding}" y="${height - 6}">${formatDistance(minDistance)}</text>
+        <text class="detail-chart-axis-label detail-chart-x-max" x="${width - padding}" y="${height - 6}">${formatDistance(maxDistance)}</text>
         <polygon points="${areaPoints}" opacity=".22"></polygon>
         <polyline points="${points}" fill="none"></polyline>
       </svg>
@@ -638,8 +628,6 @@ function renderAdventureMiniStats(adventure) {
     <div class="adventure-mini-stats" aria-label="Activity summary">
       <span><strong>${adventure.date}</strong><small>Date</small></span>
       <span><strong>${adventure.distance}</strong><small>Distance</small></span>
-      <span><strong>${adventure.elevation}</strong><small>Elevation</small></span>
-      <span><strong>${adventure.time}</strong><small>Moving Time</small></span>
     </div>
   `;
 }
@@ -671,13 +659,13 @@ function renderAdventureDetail(adventure, container, activityImages = []) {
       <div class="adventure-detail-copy">
         <p class="eyebrow">${adventure.type}</p>
         <h1>${adventure.title}</h1>
+        ${renderAdventureMiniStats(adventure)}
         <p>${adventure.description}</p>
         ${renderActivityImageCarousel(activityImages, adventure.title)}
         <div class="detail-map" id="detailMap"></div>
         <div class="detail-chart-grid" id="detailCharts" hidden></div>
       </div>
       <div class="adventure-detail-media">
-        ${renderAdventureMiniStats(adventure)}
         <div class="adventure-narrative-grid has-no-video">
           ${renderAdventureStory(adventure)}
         </div>
@@ -694,7 +682,6 @@ function renderAdventureDetail(adventure, container, activityImages = []) {
   loadGpxTrack(adventure.gpx)
     .then(track => {
       renderLeafletMap(document.getElementById("detailMap"), track);
-      updateAdventureMiniStats(track);
       renderRouteCharts(track);
     })
     .catch(() => {
