@@ -16,7 +16,7 @@ function homeLink(hash) {
 const pageInfo = getPageInfo();
 const shouldResetHomeOnLoad = pageInfo.isHome && !window.location.hash;
 const siteBaseUrl = new URL(".", document.baseURI);
-const dataVersion = "20260505-10";
+const dataVersion = "20260505-11";
 
 if (shouldResetHomeOnLoad && "scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -684,6 +684,7 @@ function syncAdventureDetailHeight(container) {
   if ("ResizeObserver" in window) {
     const observer = new ResizeObserver(() => requestAnimationFrame(setHeight));
     observer.observe(copy);
+    if (video) observer.observe(video);
   }
 
   container.querySelectorAll("img").forEach(image => {

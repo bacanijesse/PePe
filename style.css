@@ -1395,7 +1395,7 @@ body.dark-mode .site-footer {
   min-height: 0;
   height: var(--story-panel-height, 100%);
   max-height: var(--story-panel-height, none);
-  overflow-y: auto;
+  overflow-y: scroll;
   overscroll-behavior: contain;
 }
 
@@ -1819,9 +1819,9 @@ body.dark-mode .detail-chart-axis {
   }
 
   .adventure-story-panel {
-    max-height: none;
-    height: 100%;
-    overflow-y: auto;
+    height: var(--story-panel-height, 100%);
+    max-height: var(--story-panel-height, none);
+    overflow-y: scroll;
     padding: clamp(14px, 1.4vw, 22px);
   }
 
