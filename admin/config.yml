@@ -2,6 +2,7 @@ backend:
   name: github
   repo: bacanijesse/PePe
   branch: main
+  allow_token_auth: true
 
 local_backend: true
 site_url: "https://bacanijesse.github.io/PePe/"
@@ -172,6 +173,6 @@ collections:
             widget: "list"
             summary: "{{fields.icon}} {{fields.title}}"
             fields:
-              - { label: "Icon", name: "icon", widget: "string", hint: "Use a short emoji or symbol, for example 🔋 or ✚." }
+              - { label: "Icon", name: "icon", widget: "string", hint: "Use a short emoji or symbol, for example a battery or medical cross." }
               - { label: "Title", name: "title", widget: "string" }
               - { label: "Description", name: "description", widget: "text" }
