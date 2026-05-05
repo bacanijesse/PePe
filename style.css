@@ -1380,9 +1380,14 @@ body.dark-mode .site-footer {
   grid-template-columns: 1fr;
   gap: 14px;
   align-content: stretch;
-  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-rows: minmax(0, var(--story-panel-height, 1fr)) auto;
   min-width: 0;
   min-height: 0;
+}
+
+.adventure-detail-media .adventure-narrative-grid {
+  height: var(--story-panel-height, auto);
+  max-height: var(--story-panel-height, none);
 }
 
 .adventure-story-panel {
@@ -1794,7 +1799,7 @@ body.dark-mode .detail-chart-axis {
 
   .adventure-detail-media {
     gap: 10px;
-    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-rows: minmax(0, var(--story-panel-height, 1fr)) auto;
     align-content: stretch;
     overflow: visible;
   }

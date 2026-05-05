@@ -16,7 +16,7 @@ function homeLink(hash) {
 const pageInfo = getPageInfo();
 const shouldResetHomeOnLoad = pageInfo.isHome && !window.location.hash;
 const siteBaseUrl = new URL(".", document.baseURI);
-const dataVersion = "20260505-11";
+const dataVersion = "20260505-12";
 
 if (shouldResetHomeOnLoad && "scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -671,7 +671,11 @@ function syncAdventureDetailHeight(container) {
 
     const columnHeight = Math.ceil(copy.getBoundingClientRect().height);
     const rowGap = parseFloat(getComputedStyle(media).rowGap || getComputedStyle(media).gap) || 0;
-    const videoHeight = video ? Math.ceil(video.getBoundingClientRect().height) : 0;
+    const videoFrame = video?.querySelector(".youtube-frame");
+    const videoHeight = video ? Math.ceil(Math.max(
+      video.getBoundingClientRect().height,
+      videoFrame?.getBoundingClientRect().height || 0
+    )) : 0;
     const storyHeight = Math.max(260, columnHeight - videoHeight - rowGap);
 
     card.style.setProperty("--detail-column-height", `${columnHeight}px`);
@@ -679,6 +683,8 @@ function syncAdventureDetailHeight(container) {
   };
 
   requestAnimationFrame(setHeight);
+  setTimeout(setHeight, 250);
+  setTimeout(setHeight, 900);
   window.addEventListener("resize", () => requestAnimationFrame(setHeight), { passive: true });
 
   if ("ResizeObserver" in window) {
