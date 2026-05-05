@@ -15,9 +15,24 @@ function homeLink(hash) {
 
 const pageInfo = getPageInfo();
 const shouldResetHomeOnLoad = pageInfo.isHome && !window.location.hash;
+const siteBaseUrl = new URL(".", document.baseURI);
 
 if (shouldResetHomeOnLoad && "scrollRestoration" in history) {
   history.scrollRestoration = "manual";
+}
+
+// Builds stable same-site URLs for GitHub Pages, local servers, and nested detail pages.
+function siteUrl(path) {
+  return new URL(path, siteBaseUrl).href;
+}
+
+function fetchJson(path) {
+  return fetch(siteUrl(path)).then(response => {
+    if (!response.ok) {
+      throw new Error(`Could not load ${path}: ${response.status}`);
+    }
+    return response.json();
+  });
 }
 
 // Creates the shared fixed header and inserts it into every page that has the siteHeader placeholder.
@@ -234,7 +249,7 @@ function loadGpxTrack(gpxPath) {
   if (!gpxTrackCache.has(gpxPath)) {
     gpxTrackCache.set(
       gpxPath,
-      fetch(gpxPath)
+      fetch(siteUrl(gpxPath))
         .then(response => {
           if (!response.ok) throw new Error(`Could not load ${gpxPath}`);
           return response.text();
@@ -633,8 +648,8 @@ function initAdventureDetailPage() {
   if (!activityId) return;
 
   Promise.all([
-    fetch("data/adventures.json").then(response => response.json()),
-    fetch("data/activity-images.json").then(response => response.ok ? response.json() : { activities: {} }).catch(() => ({ activities: {} }))
+    fetchJson("data/adventures.json"),
+    fetchJson("data/activity-images.json").catch(() => ({ activities: {} }))
   ])
     .then(([data, imageData]) => {
       const pageType = detailRoot.dataset.type;
@@ -1130,8 +1145,7 @@ adventureSearch?.addEventListener("input", () => {
 });
 
 if (heroQuoteText) {
-  fetch("data/quotes.json")
-    .then(response => response.json())
+  fetchJson("data/quotes.json")
     .then(data => renderRandomHeroQuote(getDataList(data, "quotes")))
     .catch(() => {
       heroQuoteText.textContent = "“The best views come after the hardest climbs.”";
@@ -1142,8 +1156,7 @@ if (heroQuoteText) {
 }
 
 if (cardGrid && cardTemplate) {
-  fetch("data/adventures.json")
-    .then(response => response.json())
+  fetchJson("data/adventures.json")
     .then(data => {
       adventures = getDataList(data, "adventures");
       renderCards(currentFilter);
@@ -1158,8 +1171,7 @@ if (cardGrid && cardTemplate) {
 }
 
 if (testimonialCarousel && testimonialTemplate) {
-  fetch("data/testimonials.json")
-    .then(response => response.json())
+  fetchJson("data/testimonials.json")
     .then(data => {
       testimonials = getDataList(data, "testimonials");
       renderTestimonials();
@@ -1178,8 +1190,7 @@ if (testimonialCarousel && testimonialTemplate) {
 }
 
 if (toolkitGrid) {
-  fetch("data/trip-essentials.json")
-    .then(response => response.json())
+  fetchJson("data/trip-essentials.json")
     .then(data => renderTripEssentials(getDataList(data, "essentials")))
     .catch(() => {
       toolkitGrid.innerHTML = "<p>Could not load trip essentials.</p>";
@@ -1226,13 +1237,7 @@ function renderDuration(totalMinutes) {
 // Loads adventure data and calculates the homepage stats bar totals.
 async function loadAdventureStats() {
   try {
-    const response = await fetch("./data/adventures.json");
-
-    if (!response.ok) {
-      throw new Error("Could not load adventures.json");
-    }
-
-    const adventuresData = await response.json();
+    const adventuresData = await fetchJson("data/adventures.json");
     const adventures = getDataList(adventuresData, "adventures");
 
     let totalRides = 0;
