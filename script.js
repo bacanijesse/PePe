@@ -16,7 +16,7 @@ function homeLink(hash) {
 const pageInfo = getPageInfo();
 const shouldResetHomeOnLoad = pageInfo.isHome && !window.location.hash;
 const siteBaseUrl = new URL(".", document.baseURI);
-const dataVersion = "20260505-12";
+const dataVersion = "20260505-13";
 
 if (shouldResetHomeOnLoad && "scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -658,6 +658,7 @@ function syncAdventureDetailHeight(container) {
   const card = container.querySelector(".adventure-detail-card");
   const copy = container.querySelector(".adventure-detail-copy");
   const media = container.querySelector(".adventure-detail-media");
+  const narrative = container.querySelector(".adventure-narrative-grid");
   const story = container.querySelector(".adventure-story-panel");
   const video = container.querySelector(".adventure-video");
   if (!card || !copy || !media || !story) return;
@@ -666,20 +667,36 @@ function syncAdventureDetailHeight(container) {
     if (!window.matchMedia("(min-width: 1101px)").matches) {
       card.style.removeProperty("--detail-column-height");
       card.style.removeProperty("--story-panel-height");
+      media.style.removeProperty("height");
+      narrative?.style.removeProperty("height");
+      narrative?.style.removeProperty("max-height");
+      story.style.removeProperty("height");
+      story.style.removeProperty("max-height");
+      story.style.removeProperty("overflow-y");
       return;
     }
 
     const columnHeight = Math.ceil(copy.getBoundingClientRect().height);
     const rowGap = parseFloat(getComputedStyle(media).rowGap || getComputedStyle(media).gap) || 0;
     const videoFrame = video?.querySelector(".youtube-frame");
+    const videoFallbackHeight = video ? Math.ceil((media.getBoundingClientRect().width * 9 / 16) + 34) : 0;
     const videoHeight = video ? Math.ceil(Math.max(
       video.getBoundingClientRect().height,
-      videoFrame?.getBoundingClientRect().height || 0
+      videoFrame?.getBoundingClientRect().height || 0,
+      videoFallbackHeight
     )) : 0;
     const storyHeight = Math.max(260, columnHeight - videoHeight - rowGap);
 
     card.style.setProperty("--detail-column-height", `${columnHeight}px`);
     card.style.setProperty("--story-panel-height", `${storyHeight}px`);
+    media.style.height = `${columnHeight}px`;
+    if (narrative) {
+      narrative.style.height = `${storyHeight}px`;
+      narrative.style.maxHeight = `${storyHeight}px`;
+    }
+    story.style.height = `${storyHeight}px`;
+    story.style.maxHeight = `${storyHeight}px`;
+    story.style.overflowY = "scroll";
   };
 
   requestAnimationFrame(setHeight);
