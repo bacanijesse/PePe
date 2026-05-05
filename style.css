@@ -2070,8 +2070,10 @@ body.dark-mode .adventure-mini-stats strong {
   .map-section,
   .info-section,
   .contact-section {
+    height: auto;
     min-height: 100svh;
     background: transparent;
+    overflow: visible;
   }
 
   .card-grid,
