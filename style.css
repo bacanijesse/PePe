@@ -994,7 +994,6 @@ h2 {
   overflow: hidden;
 }
 
-.card-timestamp,
 .testimonial-timestamp {
   align-self: flex-end;
   color: var(--muted);

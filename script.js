@@ -1443,12 +1443,6 @@ function renderCards(filter = "all") {
     clone.querySelector(".card-essential-icons").outerHTML = renderAdventureEssentialIcons(item, true);
     clone.querySelector(".elevation").textContent = item.elevation;
     clone.querySelector(".time").textContent = item.time;
-    const timestamp = clone.querySelector(".card-timestamp");
-    if (timestamp) {
-      timestamp.textContent = formatPostTimestamp(item);
-      timestamp.dateTime = getPostTime(item);
-    }
-
     cardGrid.appendChild(clone);
     renderGpxCard(item, cardGrid.lastElementChild);
   });
