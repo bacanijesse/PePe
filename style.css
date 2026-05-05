@@ -1363,6 +1363,7 @@ body.dark-mode .site-footer {
   gap: 14px;
   grid-template-rows: minmax(0, 1fr);
   min-height: 0;
+  overflow: hidden;
 }
 
 .adventure-narrative-grid.has-video {
@@ -1392,8 +1393,8 @@ body.dark-mode .site-footer {
   border-radius: 18px;
   padding: clamp(18px, 2.2vw, 28px);
   min-height: 0;
-  height: 100%;
-  max-height: none;
+  height: var(--story-panel-height, 100%);
+  max-height: var(--story-panel-height, none);
   overflow-y: auto;
   overscroll-behavior: contain;
 }

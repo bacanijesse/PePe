@@ -657,15 +657,25 @@ function renderAdventureStory(adventure) {
 function syncAdventureDetailHeight(container) {
   const card = container.querySelector(".adventure-detail-card");
   const copy = container.querySelector(".adventure-detail-copy");
-  if (!card || !copy) return;
+  const media = container.querySelector(".adventure-detail-media");
+  const story = container.querySelector(".adventure-story-panel");
+  const video = container.querySelector(".adventure-video");
+  if (!card || !copy || !media || !story) return;
 
   const setHeight = () => {
     if (!window.matchMedia("(min-width: 1101px)").matches) {
       card.style.removeProperty("--detail-column-height");
+      card.style.removeProperty("--story-panel-height");
       return;
     }
 
-    card.style.setProperty("--detail-column-height", `${Math.ceil(copy.getBoundingClientRect().height)}px`);
+    const columnHeight = Math.ceil(copy.getBoundingClientRect().height);
+    const rowGap = parseFloat(getComputedStyle(media).rowGap || getComputedStyle(media).gap) || 0;
+    const videoHeight = video ? Math.ceil(video.getBoundingClientRect().height) : 0;
+    const storyHeight = Math.max(260, columnHeight - videoHeight - rowGap);
+
+    card.style.setProperty("--detail-column-height", `${columnHeight}px`);
+    card.style.setProperty("--story-panel-height", `${storyHeight}px`);
   };
 
   requestAnimationFrame(setHeight);
