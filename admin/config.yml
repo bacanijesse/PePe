@@ -12,6 +12,48 @@ media_folder: "assets/uploads"
 public_folder: "assets/uploads"
 
 collections:
+  - name: "adventure_posts"
+    label: "Adventure Posts"
+    label_singular: "Adventure Post"
+    folder: "adventures"
+    path: "activity_{{fields.activityId}}/activity"
+    create: true
+    extension: "json"
+    format: "json"
+    identifier_field: "title"
+    summary: "{{title}}"
+    fields:
+      - { label: "Activity ID", name: "activityId", widget: "string", hint: "Use a unique number. Example: 2026050501" }
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Type", name: "type", widget: "select", options: ["ride", "hike"] }
+      - { label: "Date", name: "date", widget: "string", hint: "Example: May 5, 2026" }
+      - { label: "Distance", name: "distance", widget: "string", hint: "Example: 12.8 km" }
+      - { label: "Elevation", name: "elevation", widget: "string", hint: "Example: 219 m" }
+      - { label: "Moving Time", name: "time", widget: "string", hint: "Example: 1h 0m" }
+      - { label: "Card Image", name: "image", widget: "image", required: false }
+      - { label: "Chart Image", name: "chart", widget: "image", required: false }
+      - { label: "GPX File Path", name: "gpx", widget: "string", required: false, hint: "Example: adventures/gpx/ride_123.gpx" }
+      - { label: "YouTube URL", name: "youtube", widget: "string", required: false }
+      - { label: "Description", name: "description", widget: "text" }
+      - label: "Gallery Images"
+        name: "images"
+        widget: "list"
+        required: false
+        field: { label: "Image", name: "image", widget: "image" }
+      - label: "Prepared With"
+        name: "preparedWith"
+        widget: "list"
+        required: false
+        fields:
+          - { label: "Icon", name: "icon", widget: "string" }
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Description", name: "description", widget: "text", required: false }
+      - label: "Story Paragraphs"
+        name: "story"
+        widget: "list"
+        required: false
+        field: { label: "Paragraph", name: "paragraph", widget: "text" }
+
   - name: "site_data"
     label: "Site Data"
     files:

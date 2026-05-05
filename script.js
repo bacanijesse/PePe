@@ -16,7 +16,10 @@ function homeLink(hash) {
 const pageInfo = getPageInfo();
 const shouldResetHomeOnLoad = pageInfo.isHome && !window.location.hash;
 const siteBaseUrl = new URL(".", document.baseURI);
-const dataVersion = "20260505-19";
+const dataVersion = "20260505-20";
+const githubRepoOwner = "bacanijesse";
+const githubRepoName = "PePe";
+const githubBranch = "main";
 
 if (shouldResetHomeOnLoad && "scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -38,6 +41,56 @@ function fetchJson(path) {
     }
     return response.json();
   });
+}
+
+// Reads GitHub's public contents API so newly created activity folders can appear without hand-editing the index file.
+function fetchGithubContents(path) {
+  const apiUrl = new URL(`https://api.github.com/repos/${githubRepoOwner}/${githubRepoName}/contents/${path}`);
+  apiUrl.searchParams.set("ref", githubBranch);
+
+  return fetch(apiUrl.href).then(response => {
+    if (!response.ok) {
+      throw new Error(`Could not scan ${path}: ${response.status}`);
+    }
+
+    return response.json();
+  });
+}
+
+// Loads the old index first, then scans activity folders so admin-created posts are discovered automatically.
+async function loadAdventureItems() {
+  const indexedData = await fetchJson("data/adventures-index.json").catch(() => ({ adventures: [] }));
+  const indexedItems = getDataList(indexedData, "adventures");
+  const detailPaths = new Map();
+
+  indexedItems.forEach(item => {
+    const detailPath = getAdventureDetailDataPath(item);
+    if (detailPath) {
+      detailPaths.set(detailPath, item);
+    }
+  });
+
+  try {
+    const folders = await fetchGithubContents("adventures");
+    folders
+      .filter(item => item.type === "dir" && /^activity_/i.test(item.name))
+      .forEach(item => {
+        const detailPath = `adventures/${item.name}/activity.json`;
+        if (!detailPaths.has(detailPath)) {
+          detailPaths.set(detailPath, { detail: detailPath });
+        }
+      });
+  } catch (error) {
+    console.info("Using local adventure index only:", error);
+  }
+
+  const items = await Promise.all(Array.from(detailPaths.entries()).map(([detailPath, summary]) => {
+    return fetchJson(detailPath)
+      .then(detail => ({ ...summary, ...detail, detail: detailPath }))
+      .catch(() => summary);
+  }));
+
+  return items.filter(item => getActivityId(item) && item.title);
 }
 
 // Creates the shared fixed header and inserts it into every page that has the siteHeader placeholder.
@@ -797,7 +850,7 @@ function renderAdventureDetail(adventure, container) {
     });
 }
 
-// Reads the activity ID from the URL, finds its index entry, then loads that activity folder's JSON.
+// Reads the activity ID from the URL, then loads that activity folder's JSON even when the post was created from admin.
 function initAdventureDetailPage() {
   const detailRoot = document.getElementById("adventureDetail");
   if (!detailRoot) return;
@@ -805,10 +858,9 @@ function initAdventureDetailPage() {
   const activityId = new URLSearchParams(window.location.search).get("activity");
   if (!activityId) return;
 
-  fetchJson("data/adventures-index.json")
-    .then(data => {
+  loadAdventureItems()
+    .then(items => {
       const pageType = detailRoot.dataset.type;
-      const items = getDataList(data, "adventures");
       const adventure = items.find(item => {
         return item.type === pageType && getActivityId(item) === activityId;
       });
@@ -1330,16 +1382,7 @@ if (heroQuoteText) {
 }
 
 if (cardGrid && cardTemplate) {
-  fetchJson("data/adventures-index.json")
-    .then(data => {
-      const summaries = getDataList(data, "adventures");
-      return Promise.all(summaries.map(item => {
-        const detailPath = getAdventureDetailDataPath(item);
-        return detailPath
-          ? fetchJson(detailPath).then(detail => ({ ...item, ...detail })).catch(() => item)
-          : Promise.resolve(item);
-      }));
-    })
+  loadAdventureItems()
     .then(items => {
       adventures = items;
       renderCards(currentFilter);
@@ -1422,8 +1465,7 @@ async function loadAdventureStats() {
   if (!document.getElementById("totalRides")) return;
 
   try {
-    const adventuresData = await fetchJson("data/adventures-index.json");
-    const adventures = getDataList(adventuresData, "adventures");
+    const adventures = await loadAdventureItems();
 
     let totalRides = 0;
     let totalHikes = 0;
