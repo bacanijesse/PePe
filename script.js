@@ -381,6 +381,70 @@ function updateAdventureMiniStats(track) {
   });
 }
 
+function getMetricValues(track, key, onlyPositive = false) {
+  return track
+    .map(point => ({
+      distance: Number(point.distance) || 0,
+      value: Number(point[key])
+    }))
+    .filter(point => Number.isFinite(point.value) && (!onlyPositive || point.value > 0));
+}
+
+function renderMetricChart(track, { key, title, unit = "", onlyPositive = false, precision = 0 }) {
+  const values = getMetricValues(track, key, onlyPositive);
+  if (values.length < 2) return "";
+
+  const width = 360;
+  const height = 120;
+  const padding = 12;
+  const minDistance = values[0].distance;
+  const maxDistance = values[values.length - 1].distance || 1;
+  const rawValues = values.map(point => point.value);
+  const minValue = Math.min(...rawValues);
+  const maxValue = Math.max(...rawValues);
+  const valueRange = maxValue - minValue || 1;
+  const distanceRange = maxDistance - minDistance || 1;
+  const formatValue = value => `${value.toFixed(precision)}${unit}`;
+  const points = values.map(point => {
+    const x = padding + ((point.distance - minDistance) / distanceRange) * (width - padding * 2);
+    const y = height - padding - ((point.value - minValue) / valueRange) * (height - padding * 2);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(" ");
+  const areaPoints = `${padding},${height - padding} ${points} ${width - padding},${height - padding}`;
+
+  return `
+    <article class="detail-chart-card">
+      <div class="detail-chart-heading">
+        <span>${title}</span>
+        <strong>${formatValue(maxValue)}</strong>
+      </div>
+      <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${title} chart">
+        <polygon points="${areaPoints}" opacity=".22"></polygon>
+        <polyline points="${points}" fill="none"></polyline>
+      </svg>
+      <div class="detail-chart-meta">
+        <span>Low ${formatValue(minValue)}</span>
+        <span>High ${formatValue(maxValue)}</span>
+      </div>
+    </article>
+  `;
+}
+
+function renderRouteCharts(track) {
+  const chartGrid = document.getElementById("detailCharts");
+  if (!chartGrid || !track.length) return;
+
+  const charts = [
+    renderMetricChart(track, { key: "ele", title: "Elevation", unit: " m", precision: 0 }),
+    renderMetricChart(track, { key: "speed", title: "Speed", unit: " km/h", onlyPositive: true, precision: 1 }),
+    renderMetricChart(track, { key: "heartRate", title: "Heart rate", unit: " bpm", onlyPositive: true, precision: 0 }),
+    renderMetricChart(track, { key: "airTemp", title: "Air temp", unit: "°C", onlyPositive: true, precision: 0 })
+  ].filter(Boolean);
+
+  chartGrid.innerHTML = charts.join("");
+  chartGrid.hidden = charts.length === 0;
+}
+
 // Builds the HTML for the activity photo carousel and delays loading hidden images.
 function renderActivityImageCarousel(images = [], title = "Adventure") {
   if (!Array.isArray(images) || images.length === 0) {
@@ -610,6 +674,7 @@ function renderAdventureDetail(adventure, container, activityImages = []) {
         <p>${adventure.description}</p>
         ${renderActivityImageCarousel(activityImages, adventure.title)}
         <div class="detail-map" id="detailMap"></div>
+        <div class="detail-chart-grid" id="detailCharts" hidden></div>
       </div>
       <div class="adventure-detail-media">
         ${renderAdventureMiniStats(adventure)}
@@ -630,6 +695,7 @@ function renderAdventureDetail(adventure, container, activityImages = []) {
     .then(track => {
       renderLeafletMap(document.getElementById("detailMap"), track);
       updateAdventureMiniStats(track);
+      renderRouteCharts(track);
     })
     .catch(() => {
       const map = document.getElementById("detailMap");
