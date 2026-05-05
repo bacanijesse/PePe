@@ -1330,7 +1330,7 @@ body.dark-mode .site-footer {
   display: grid;
   grid-template-columns: minmax(360px, .9fr) minmax(0, 1.1fr);
   gap: clamp(22px, 3vw, 42px);
-  align-items: start;
+  align-items: stretch;
   min-height: 0;
   background: var(--surface);
   border: 1px solid var(--line);
@@ -1378,9 +1378,10 @@ body.dark-mode .site-footer {
   display: grid;
   grid-template-columns: 1fr;
   gap: 14px;
-  align-content: start;
-  grid-template-rows: auto auto auto;
+  align-content: stretch;
+  grid-template-rows: minmax(0, 1fr) auto;
   min-width: 0;
+  min-height: 0;
 }
 
 .adventure-story-panel {
@@ -1391,9 +1392,9 @@ body.dark-mode .site-footer {
   border-radius: 18px;
   padding: clamp(18px, 2.2vw, 28px);
   min-height: 0;
-  height: auto;
+  height: 100%;
   max-height: none;
-  overflow: visible;
+  overflow-y: auto;
   overscroll-behavior: contain;
 }
 
@@ -1431,6 +1432,7 @@ body.dark-mode .site-footer {
 }
 
 .adventure-detail-media > .adventure-video {
+  align-self: end;
   margin-top: 0;
 }
 
@@ -1770,6 +1772,7 @@ body.dark-mode .detail-chart-axis {
     min-height: calc(100vh - var(--header-height) - 24px);
     gap: clamp(16px, 1.8vw, 28px);
     padding: clamp(16px, 1.8vw, 28px);
+    align-items: stretch;
     overflow: visible;
   }
 
@@ -1790,13 +1793,19 @@ body.dark-mode .detail-chart-axis {
 
   .adventure-detail-media {
     gap: 10px;
-    grid-template-rows: auto auto auto;
+    grid-template-rows: minmax(0, 1fr) auto;
+    align-content: stretch;
     overflow: visible;
   }
 
-  .adventure-detail-copy,
-  .adventure-detail-media {
+  .adventure-detail-copy {
     height: auto;
+    min-height: 0;
+  }
+
+  .adventure-detail-media {
+    height: var(--detail-column-height, 100%);
+    min-height: 0;
   }
 
   .adventure-narrative-grid {
@@ -1810,6 +1819,8 @@ body.dark-mode .detail-chart-axis {
 
   .adventure-story-panel {
     max-height: none;
+    height: 100%;
+    overflow-y: auto;
     padding: clamp(14px, 1.4vw, 22px);
   }
 
@@ -2048,8 +2059,9 @@ body.dark-mode .detail-chart-axis {
   }
 
   .adventure-detail-media {
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto auto;
     overflow: visible;
+    height: auto;
   }
 
   .adventure-detail-media > .adventure-video .youtube-frame {
@@ -2069,6 +2081,7 @@ body.dark-mode .detail-chart-axis {
   .adventure-story-panel {
     height: auto;
     max-height: none;
+    overflow: visible;
   }
 
   .detail-chart-grid {

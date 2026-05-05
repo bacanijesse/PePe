@@ -16,6 +16,7 @@ function homeLink(hash) {
 const pageInfo = getPageInfo();
 const shouldResetHomeOnLoad = pageInfo.isHome && !window.location.hash;
 const siteBaseUrl = new URL(".", document.baseURI);
+const dataVersion = "20260505-9";
 
 if (shouldResetHomeOnLoad && "scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -27,7 +28,10 @@ function siteUrl(path) {
 }
 
 function fetchJson(path) {
-  return fetch(siteUrl(path)).then(response => {
+  const url = new URL(path, siteBaseUrl);
+  url.searchParams.set("v", dataVersion);
+
+  return fetch(url.href).then(response => {
     if (!response.ok) {
       throw new Error(`Could not load ${path}: ${response.status}`);
     }
@@ -650,6 +654,35 @@ function renderAdventureStory(adventure) {
   `;
 }
 
+function syncAdventureDetailHeight(container) {
+  const card = container.querySelector(".adventure-detail-card");
+  const copy = container.querySelector(".adventure-detail-copy");
+  if (!card || !copy) return;
+
+  const setHeight = () => {
+    if (!window.matchMedia("(min-width: 1101px)").matches) {
+      card.style.removeProperty("--detail-column-height");
+      return;
+    }
+
+    card.style.setProperty("--detail-column-height", `${Math.ceil(copy.getBoundingClientRect().height)}px`);
+  };
+
+  requestAnimationFrame(setHeight);
+  window.addEventListener("resize", () => requestAnimationFrame(setHeight), { passive: true });
+
+  if ("ResizeObserver" in window) {
+    const observer = new ResizeObserver(() => requestAnimationFrame(setHeight));
+    observer.observe(copy);
+  }
+
+  container.querySelectorAll("img").forEach(image => {
+    if (!image.complete) {
+      image.addEventListener("load", () => requestAnimationFrame(setHeight), { once: true });
+    }
+  });
+}
+
 // Builds the full ride/hike detail page: text, video, map, chart, and photo carousel.
 function renderAdventureDetail(adventure, container, activityImages = []) {
   container.classList.add("activity-detail-layout");
@@ -676,6 +709,7 @@ function renderAdventureDetail(adventure, container, activityImages = []) {
 
   initActivityImageCarousel(container);
   initYoutubeEmbeds(container);
+  syncAdventureDetailHeight(container);
 
   if (!adventure.gpx) return;
 
@@ -683,6 +717,7 @@ function renderAdventureDetail(adventure, container, activityImages = []) {
     .then(track => {
       renderLeafletMap(document.getElementById("detailMap"), track);
       renderRouteCharts(track);
+      syncAdventureDetailHeight(container);
     })
     .catch(() => {
       const map = document.getElementById("detailMap");
