@@ -1158,9 +1158,10 @@ h2 {
 
 .testimonial-image-box {
   width: 96px;
-  aspect-ratio: 1;
+  height: 96px;
+  flex: 0 0 96px;
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: 50%;
   overflow: hidden;
   background: var(--page);
 }
@@ -1168,7 +1169,9 @@ h2 {
 .testimonial-image {
   width: 100%;
   height: 100%;
+  display: block;
   object-fit: cover;
+  object-position: center;
 }
 
 .testimonial-card h2 {
@@ -2355,13 +2358,14 @@ body.dark-mode .detail-chart-axis {
   }
 
   .testimonial-header {
-    grid-template-columns: minmax(0, 1fr) 78px;
+    grid-template-columns: minmax(0, 1fr) 86px;
     gap: 14px;
   }
 
   .testimonial-image-box {
-    width: 78px;
-    border-radius: 14px;
+    width: 86px;
+    height: 86px;
+    flex-basis: 86px;
   }
 
   .carousel-controls {
@@ -2444,6 +2448,8 @@ body.dark-mode .detail-chart-axis {
 
   .testimonial-image-box {
     width: 86px;
+    height: 86px;
+    flex-basis: 86px;
     order: -1;
   }
 
