@@ -16,7 +16,7 @@ function homeLink(hash) {
 const pageInfo = getPageInfo();
 const shouldResetHomeOnLoad = pageInfo.isHome && !window.location.hash;
 const siteBaseUrl = new URL(".", document.baseURI);
-const dataVersion = "20260505-21";
+const dataVersion = "20260505-22";
 const githubRepoOwner = "bacanijesse";
 const githubRepoName = "PePe";
 const githubBranch = "main";
@@ -84,13 +84,21 @@ async function loadAdventureItems() {
     console.info("Using local adventure index only:", error);
   }
 
-  const items = await Promise.all(Array.from(detailPaths.entries()).map(([detailPath, summary]) => {
+  const items = await Promise.all(Array.from(detailPaths.entries()).map(([detailPath, summary], index) => {
     return fetchJson(detailPath)
-      .then(detail => ({ ...summary, ...detail, detail: detailPath }))
+      .then(detail => ({
+        ...summary,
+        ...detail,
+        detail: detailPath,
+        images: normalizeImageList(detail.images),
+        image: normalizeMediaPath(detail.image || summary.image)
+      }))
       .catch(() => summary);
   }));
 
-  return items.filter(item => getActivityId(item) && item.title);
+  return items
+    .filter(item => getActivityId(item) && item.title)
+    .sort((a, b) => getPostSortValue(b) - getPostSortValue(a));
 }
 
 // Creates the shared fixed header and inserts it into every page that has the siteHeader placeholder.
@@ -242,6 +250,55 @@ function renderRandomHeroQuote(quotes) {
 function getDataList(data, key) {
   if (Array.isArray(data)) return data;
   return Array.isArray(data?.[key]) ? data[key] : [];
+}
+
+// Converts Sveltia image values into paths that work from the GitHub Pages subfolder.
+function normalizeMediaPath(value) {
+  const rawPath = typeof value === "string"
+    ? value
+    : value?.image || value?.path || value?.url || "";
+  if (!rawPath) return "";
+  if (/^(?:https?:)?\/\//i.test(rawPath) || rawPath.startsWith("data:")) return rawPath;
+
+  return rawPath
+    .replace(/^\/PePe\//i, "")
+    .replace(/^\/+/, "");
+}
+
+// Normalizes a CMS gallery list, including lists saved as image objects.
+function normalizeImageList(images) {
+  if (!Array.isArray(images)) return [];
+
+  return images
+    .map(normalizeMediaPath)
+    .filter(Boolean);
+}
+
+// Finds the best available publish timestamp for sorting and display.
+function getPostTime(item) {
+  return item?.postedAt || item?.createdAt || item?.timestamp || item?.date || "";
+}
+
+// Converts a publish date into a numeric value for newest-first sorting.
+function getPostSortValue(item, fallbackIndex = 0) {
+  const parsed = Date.parse(getPostTime(item));
+  return Number.isNaN(parsed) ? fallbackIndex : parsed;
+}
+
+// Formats a compact timestamp for the lower-right corner of cards.
+function formatPostTimestamp(item) {
+  const rawTime = getPostTime(item);
+  const parsed = Date.parse(rawTime);
+
+  if (Number.isNaN(parsed)) {
+    return rawTime || "Recent";
+  }
+
+  return new Intl.DateTimeFormat("en", {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  }).format(new Date(parsed));
 }
 
 // Pulls the activity ID number from GPX filenames like ride_123.gpx, hike_123.gpx, or run_123.gpx.
@@ -521,7 +578,9 @@ function renderRouteCharts(track) {
 
 // Builds the HTML for the activity photo carousel and delays loading hidden images.
 function renderActivityImageCarousel(images = [], title = "Adventure") {
-  if (!Array.isArray(images) || images.length === 0) {
+  const galleryImages = normalizeImageList(images);
+
+  if (!galleryImages.length) {
     return `
       <section class="activity-carousel is-empty" aria-label="${title} photo carousel">
         <div class="activity-carousel-viewport"></div>
@@ -530,12 +589,12 @@ function renderActivityImageCarousel(images = [], title = "Adventure") {
     `;
   }
 
-  const slides = images.map((src, index) => `
+  const slides = galleryImages.map((src, index) => `
     <figure class="activity-slide ${index === 0 ? "is-active" : ""}" data-slide-index="${index}">
       <img ${index === 0 ? `src="${src}" fetchpriority="high"` : `data-src="${src}"`} alt="${title} photo ${index + 1}" loading="${index === 0 ? "eager" : "lazy"}" decoding="async" />
     </figure>
   `).join("");
-  const dots = images.map((_, index) => `
+  const dots = galleryImages.map((_, index) => `
     <button class="activity-carousel-dot ${index === 0 ? "is-active" : ""}" type="button" data-slide-index="${index}" aria-label="Show photo ${index + 1}"></button>
   `).join("");
 
@@ -1291,8 +1350,13 @@ function renderTestimonials() {
     clone.querySelector(".testimonial-name").textContent = item.name;
     clone.querySelector(".testimonial-title").textContent = item.title;
     clone.querySelector(".testimonial-text").textContent = item.text;
-    image.src = item.image || "assets/avatar.svg";
+    image.src = normalizeMediaPath(item.image) || "assets/avatar.svg";
     image.alt = `${item.name} photo`;
+    const timestamp = clone.querySelector(".testimonial-timestamp");
+    if (timestamp) {
+      timestamp.textContent = formatPostTimestamp(item);
+      timestamp.dateTime = getPostTime(item);
+    }
 
     ["facebook", "youtube", "tiktok"].forEach(platform => {
       socials.appendChild(renderSocialLink(platform, item.socials?.[platform]));
@@ -1379,6 +1443,11 @@ function renderCards(filter = "all") {
     clone.querySelector(".card-essential-icons").outerHTML = renderAdventureEssentialIcons(item, true);
     clone.querySelector(".elevation").textContent = item.elevation;
     clone.querySelector(".time").textContent = item.time;
+    const timestamp = clone.querySelector(".card-timestamp");
+    if (timestamp) {
+      timestamp.textContent = formatPostTimestamp(item);
+      timestamp.dateTime = getPostTime(item);
+    }
 
     cardGrid.appendChild(clone);
     renderGpxCard(item, cardGrid.lastElementChild);
@@ -1428,7 +1497,9 @@ if (cardGrid && cardTemplate) {
 if (testimonialCarousel && testimonialTemplate) {
   fetchJson("data/testimonials.json")
     .then(data => {
-      testimonials = getDataList(data, "testimonials");
+      testimonials = getDataList(data, "testimonials")
+        .map((item, index) => ({ ...item, image: normalizeMediaPath(item.image), _sortIndex: index }))
+        .sort((a, b) => getPostSortValue(b, b._sortIndex) - getPostSortValue(a, a._sortIndex));
       renderTestimonials();
       scrollToHashTarget();
     })

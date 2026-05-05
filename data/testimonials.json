@@ -4,6 +4,7 @@
     {
       "name": "Alex Rivera",
       "title": "Tagaytay Loop",
+      "postedAt": "2026-01-18T08:00:00+08:00",
       "text": "The climb was steady, the air was cool, and the view made every hard pedal worth it.",
       "image": "assets/avatar.svg",
       "socials": {
@@ -15,6 +16,7 @@
     {
       "name": "Mika Santos",
       "title": "Mt. Batulao Summit",
+      "postedAt": "2026-02-08T08:00:00+08:00",
       "text": "The trail had sharp ridgelines and a summit view that felt like a proper reward.",
       "image": "assets/avatar.svg",
       "socials": {
@@ -26,6 +28,7 @@
     {
       "name": "Jon Cruz",
       "title": "Nasugbu Coastal Ride",
+      "postedAt": "2026-02-24T08:00:00+08:00",
       "text": "Long roads, sea breeze, and good pacing made this one of the smoothest rides.",
       "image": "assets/avatar.svg",
       "socials": {
@@ -37,6 +40,7 @@
     {
       "name": "Rae Lim",
       "title": "Pagsanjan Loop",
+      "postedAt": "2026-03-12T08:00:00+08:00",
       "text": "Quiet roads and forest views made the ride feel calm even when the legs were tired.",
       "image": "assets/avatar.svg",
       "socials": {
@@ -48,6 +52,7 @@
     {
       "name": "Leo Tan",
       "title": "Tagaytay Loop",
+      "postedAt": "2026-03-28T08:00:00+08:00",
       "text": "The climb was steady, the air was cool, and the view made every hard pedal worth it.",
       "image": "assets/avatar.svg",
       "socials": {
@@ -59,8 +64,9 @@
     {
       "name": "Dan Druffe",
       "title": "Hsinchu zoo",
+      "postedAt": "2026-05-05T23:19:51+08:00",
       "text": "Ang galing parang tangaa lang. sample lang to.",
-      "image": "/assets/uploads/logo.webp",
+      "image": "assets/uploads/logo.webp",
       "socials": null
     }
   ]

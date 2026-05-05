@@ -27,6 +27,7 @@ collections:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Type", name: "type", widget: "select", options: ["ride", "hike"] }
       - { label: "Date", name: "date", widget: "string", hint: "Example: May 5, 2026" }
+      - { label: "Published At", name: "postedAt", widget: "datetime", required: false, hint: "Used for newest-first sorting and the lower-right timestamp." }
       - { label: "Distance", name: "distance", widget: "string", hint: "Example: 12.8 km" }
       - { label: "Elevation", name: "elevation", widget: "string", hint: "Example: 219 m" }
       - { label: "Moving Time", name: "time", widget: "string", hint: "Example: 1h 0m" }
@@ -192,6 +193,7 @@ collections:
             fields:
               - { label: "Name", name: "name", widget: "string" }
               - { label: "Title", name: "title", widget: "string" }
+              - { label: "Published At", name: "postedAt", widget: "datetime", required: false, hint: "Used for newest-first sorting and the lower-right timestamp." }
               - { label: "Text", name: "text", widget: "text" }
               - { label: "Image", name: "image", widget: "image", required: false }
               - label: "Social Links"

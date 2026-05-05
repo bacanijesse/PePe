@@ -973,6 +973,7 @@ h2 {
 .card-body {
   padding: 14px 14px 10px;
   min-width: 0;
+  position: relative;
 }
 
 .card-body h3 {
@@ -991,6 +992,19 @@ h2 {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.card-timestamp,
+.testimonial-timestamp {
+  align-self: flex-end;
+  color: var(--muted);
+  display: block;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+  margin-top: 8px;
+  text-align: right;
+  text-transform: uppercase;
 }
 
 .card-essential-icons,
@@ -1132,6 +1146,7 @@ h2 {
   flex-direction: column;
   min-width: 0;
   overflow: visible;
+  position: relative;
 }
 
 .testimonial-header {
@@ -1171,7 +1186,7 @@ h2 {
   display: flex;
   gap: 12px;
   margin-top: auto;
-  padding-top: 20px;
+  padding-top: 18px;
   border-top: 1px solid var(--line);
 }
 
