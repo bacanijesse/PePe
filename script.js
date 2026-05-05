@@ -609,13 +609,13 @@ function renderAdventureDetail(adventure, container, activityImages = []) {
         <h1>${adventure.title}</h1>
         <p>${adventure.description}</p>
         ${renderActivityImageCarousel(activityImages, adventure.title)}
-        <div class="adventure-narrative-grid has-no-video">
-          ${renderAdventureStory(adventure)}
-        </div>
+        <div class="detail-map" id="detailMap"></div>
       </div>
       <div class="adventure-detail-media">
         ${renderAdventureMiniStats(adventure)}
-        <div class="detail-map" id="detailMap"></div>
+        <div class="adventure-narrative-grid has-no-video">
+          ${renderAdventureStory(adventure)}
+        </div>
         ${renderAdventureVideo(adventure.youtube, adventure.title)}
       </div>
     </article>

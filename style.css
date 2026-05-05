@@ -1330,8 +1330,8 @@ body.dark-mode .site-footer {
   display: grid;
   grid-template-columns: minmax(360px, .9fr) minmax(0, 1.1fr);
   gap: clamp(22px, 3vw, 42px);
-  align-items: stretch;
-  min-height: calc(100vh - var(--header-height) - clamp(80px, 10vh, 140px));
+  align-items: start;
+  min-height: 0;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 24px;
@@ -1378,8 +1378,8 @@ body.dark-mode .site-footer {
   display: grid;
   grid-template-columns: 1fr;
   gap: 14px;
-  align-content: stretch;
-  grid-template-rows: auto auto minmax(0, 1fr);
+  align-content: start;
+  grid-template-rows: auto auto auto;
   min-width: 0;
 }
 
@@ -1392,8 +1392,8 @@ body.dark-mode .site-footer {
   padding: clamp(18px, 2.2vw, 28px);
   min-height: 0;
   height: auto;
-  max-height: clamp(220px, 26vh, 340px);
-  overflow-y: auto;
+  max-height: none;
+  overflow: visible;
   overscroll-behavior: contain;
 }
 
@@ -1492,9 +1492,9 @@ body.dark-mode .adventure-mini-stats strong {
 }
 
 .adventure-detail-media > .adventure-video .youtube-frame {
-  aspect-ratio: auto;
-  height: 100%;
-  min-height: 0;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  min-height: clamp(260px, 30vw, 520px);
 }
 
 .youtube-frame img,
@@ -1543,7 +1543,7 @@ body.dark-mode .adventure-mini-stats strong {
 }
 
 .detail-map {
-  min-height: 260px;
+  min-height: clamp(260px, 38vh, 430px);
   border: 1px solid var(--line);
   border-radius: 18px;
   overflow: hidden;
@@ -1665,16 +1665,16 @@ body.dark-mode .adventure-mini-stats strong {
   }
 
   .adventure-detail-card {
-    height: calc(100vh - var(--header-height) - 24px);
-    min-height: 0;
+    height: auto;
+    min-height: calc(100vh - var(--header-height) - 24px);
     gap: clamp(16px, 1.8vw, 28px);
     padding: clamp(16px, 1.8vw, 28px);
-    overflow: hidden;
+    overflow: visible;
   }
 
   .adventure-detail-copy {
     gap: clamp(10px, 1.2vh, 16px);
-    overflow: hidden;
+    overflow: visible;
   }
 
   .adventure-detail-copy h1 {
@@ -1689,13 +1689,13 @@ body.dark-mode .adventure-mini-stats strong {
 
   .adventure-detail-media {
     gap: 10px;
-    grid-template-rows: auto auto minmax(0, 1fr);
-    overflow: hidden;
+    grid-template-rows: auto auto auto;
+    overflow: visible;
   }
 
   .adventure-detail-copy,
   .adventure-detail-media {
-    height: 100%;
+    height: auto;
   }
 
   .adventure-narrative-grid {
@@ -1741,12 +1741,12 @@ body.dark-mode .adventure-mini-stats strong {
   }
 
   .adventure-detail-media > .adventure-video .youtube-frame {
-    height: 100%;
-    min-height: 320px;
+    height: auto;
+    min-height: clamp(300px, 32vw, 560px);
   }
 
   .adventure-detail-media > .adventure-video {
-    height: 100%;
+    height: auto;
     min-height: 0;
   }
 }
@@ -1964,7 +1964,7 @@ body.dark-mode .adventure-mini-stats strong {
 
   .adventure-story-panel {
     height: auto;
-    max-height: clamp(260px, 42vh, 460px);
+    max-height: none;
   }
 }
 
