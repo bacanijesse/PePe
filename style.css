@@ -632,7 +632,7 @@ body.dark-mode .hero-quote {
   align-self: end;
 }
 
-/* Homepage stats bar: values are calculated from data/adventures.json by script.js. */
+/* Homepage stats bar: values are calculated from data/adventures-index.json by script.js. */
 .stats-bar {
   min-height: clamp(82px, 11vh, 112px);
   background: transparent;

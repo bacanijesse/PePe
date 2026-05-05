@@ -1,6 +1,7 @@
 param(
   [string]$GpxRoot = "adventures/gpx",
-  [string]$OutputPath = "data/adventures.json"
+  [string]$AdventureRoot = "adventures",
+  [string]$IndexPath = "data/adventures-index.json"
 )
 
 function Get-HaversineDistanceKm {
@@ -49,6 +50,27 @@ function Get-TitleFromGpxName {
 
   $label = if ($Type -eq "hike") { "Hike" } elseif ($Type -eq "run") { "Run" } else { "Ride" }
   return "$label $ActivityId"
+}
+
+function Get-RelativePath {
+  param([string]$Path)
+  return $Path.Replace((Get-Location).Path + [IO.Path]::DirectorySeparatorChar, "").Replace("\", "/")
+}
+
+function Get-ActivityImages {
+  param([string]$ActivityDirectory)
+
+  $imageDirectory = Join-Path $ActivityDirectory "images"
+  $imageExtensions = @(".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif")
+
+  if (-not (Test-Path -LiteralPath $imageDirectory)) {
+    return @()
+  }
+
+  return @(Get-ChildItem -LiteralPath $imageDirectory -File |
+    Where-Object { $imageExtensions -contains $_.Extension.ToLowerInvariant() } |
+    Sort-Object Name |
+    ForEach-Object { Get-RelativePath -Path $_.FullName })
 }
 
 function Get-GpxSummary {
@@ -104,7 +126,6 @@ function Get-GpxSummary {
   }
 
   $durationMinutes = if ($firstTime -and $lastTime) { ($lastTime - $firstTime).TotalMinutes } else { 0 }
-  $relativePath = $File.FullName.Replace((Get-Location).Path + [IO.Path]::DirectorySeparatorChar, "").Replace("\", "/")
 
   return [pscustomobject]@{
     ActivityId = $activityId
@@ -114,20 +135,20 @@ function Get-GpxSummary {
     Distance = "{0:N1} km" -f $distanceKm
     Elevation = "{0:N0} m" -f $elevationGain
     Time = Format-ActivityTime -TotalMinutes $durationMinutes
-    Gpx = $relativePath
+    Gpx = Get-RelativePath -Path $File.FullName
   }
 }
 
-$existingData = if (Test-Path -LiteralPath $OutputPath) {
-  Get-Content -LiteralPath $OutputPath -Raw | ConvertFrom-Json
+$existingIndex = if (Test-Path -LiteralPath $IndexPath) {
+  Get-Content -LiteralPath $IndexPath -Raw | ConvertFrom-Json
 } else {
   [pscustomobject]@{ adventures = @() }
 }
 
-$existingByGpx = @{}
-foreach ($item in @($existingData.adventures)) {
-  if ($item.gpx) {
-    $existingByGpx[$item.gpx] = $item
+$existingById = @{}
+foreach ($item in @($existingIndex.adventures)) {
+  if ($item.activityId) {
+    $existingById[$item.activityId] = $item
   }
 }
 
@@ -138,20 +159,42 @@ Get-ChildItem -LiteralPath $GpxRoot -File -Filter "*.gpx" | Sort-Object Name | F
     return
   }
 
-  $existing = $existingByGpx[$summary.Gpx]
-  $adventures += [ordered]@{
-    title = if ($existing.title) { $existing.title } else { $summary.Title }
-    type = if ($existing.type) { $existing.type } else { $summary.Type }
+  $activityDirectory = Join-Path $AdventureRoot "activity_$($summary.ActivityId)"
+  $activityPath = Join-Path $activityDirectory "activity.json"
+  $detailPath = (Get-RelativePath -Path $activityPath)
+  $existingIndexItem = $existingById[$summary.ActivityId]
+  $existingDetail = if (Test-Path -LiteralPath $activityPath) {
+    Get-Content -LiteralPath $activityPath -Raw | ConvertFrom-Json
+  } else {
+    $null
+  }
+
+  if (-not (Test-Path -LiteralPath $activityDirectory)) {
+    New-Item -ItemType Directory -Path $activityDirectory | Out-Null
+  }
+
+  $activity = [ordered]@{
+    activityId = $summary.ActivityId
+    title = if ($existingDetail.title) { $existingDetail.title } elseif ($existingIndexItem.title) { $existingIndexItem.title } else { $summary.Title }
+    type = if ($existingDetail.type) { $existingDetail.type } elseif ($existingIndexItem.type) { $existingIndexItem.type } else { $summary.Type }
     date = $summary.Date
     distance = $summary.Distance
     elevation = $summary.Elevation
     time = $summary.Time
-    image = if ($existing.image) { $existing.image } else { "assets/hero-bike-road.svg" }
-    chart = if ($existing.chart) { $existing.chart } else { "assets/chart-green.svg" }
+    image = if ($existingDetail.image) { $existingDetail.image } elseif ($existingIndexItem.image) { $existingIndexItem.image } else { "assets/hero-bike-road.svg" }
+    chart = if ($existingDetail.chart) { $existingDetail.chart } elseif ($existingIndexItem.chart) { $existingIndexItem.chart } else { "assets/chart-green.svg" }
     gpx = $summary.Gpx
-    youtube = if ($existing.youtube) { $existing.youtube } else { "" }
-    story = if ($existing.story) {
-      @($existing.story)
+    youtube = if ($existingDetail.youtube) { $existingDetail.youtube } else { "" }
+    description = if ($existingDetail.description) {
+      $existingDetail.description
+    } elseif ($existingIndexItem.description) {
+      $existingIndexItem.description
+    } else {
+      "Auto-generated from $($summary.Gpx). Replace this with a short summary when the real story is ready."
+    }
+    images = Get-ActivityImages -ActivityDirectory $activityDirectory
+    story = if ($existingDetail.story) {
+      @($existingDetail.story)
     } else {
       @(
         "This is an auto-generated starter story for activity_$($summary.ActivityId). It was created from the GPX file so the card and detail page can exist before the real photos, videos, and written notes are ready.",
@@ -159,18 +202,31 @@ Get-ChildItem -LiteralPath $GpxRoot -File -Filter "*.gpx" | Sort-Object Name | F
         "The map, chart, distance, elevation, and moving time already come from the GPX file. This story section is where the human part of the adventure will live."
       )
     }
-    description = if ($existing.description) {
-      $existing.description
-    } else {
-      "Auto-generated from $($summary.Gpx). Replace this with a short summary when the real story is ready."
-    }
   }
+
+  $indexItem = [ordered]@{
+    activityId = $activity.activityId
+    title = $activity.title
+    type = $activity.type
+    date = $activity.date
+    distance = $activity.distance
+    elevation = $activity.elevation
+    time = $activity.time
+    image = $activity.image
+    chart = $activity.chart
+    gpx = $activity.gpx
+    detail = $detailPath
+    description = $activity.description
+  }
+
+  $activity | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $activityPath -Encoding UTF8
+  $adventures += $indexItem
 }
 
 $manifest = [ordered]@{
-  _comment = "Generated from adventures/gpx by tools/update-adventures.ps1. Static browsers cannot scan GPX folders directly, so the site loads adventure cards from this file."
+  _comment = "Lightweight adventure index for homepage cards and stats. Full stories live in adventures/activity_<id>/activity.json."
   adventures = $adventures
 }
 
-$manifest | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $OutputPath -Encoding UTF8
-Write-Host "Updated $OutputPath with $($adventures.Count) adventure(s)."
+$manifest | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $IndexPath -Encoding UTF8
+Write-Host "Updated $IndexPath and $($adventures.Count) activity detail file(s)."

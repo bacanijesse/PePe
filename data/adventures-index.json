@@ -1,0 +1,33 @@
+﻿{
+    "_comment":  "Lightweight adventure index for homepage cards and stats. Full stories live in adventures/activity_\u003cid\u003e/activity.json.",
+    "adventures":  [
+                       {
+                           "activityId":  "21904385848",
+                           "title":  "Hukou Township Mountain Biking",
+                           "type":  "ride",
+                           "date":  "Feb 18, 2026",
+                           "distance":  "4.2 km",
+                           "elevation":  "44 m",
+                           "time":  "16m",
+                           "image":  "assets/hero-bike-road.svg",
+                           "chart":  "assets/chart-green.svg",
+                           "gpx":  "adventures/gpx/ride_21904385848.gpx",
+                           "detail":  "adventures/activity_21904385848/activity.json",
+                           "description":  "A short Garmin-recorded mountain bike activity around Hukou Township with a compact climb and quick moving time."
+                       },
+                       {
+                           "activityId":  "21906513266",
+                           "title":  "Ride 21906513266",
+                           "type":  "ride",
+                           "date":  "Feb 18, 2026",
+                           "distance":  "12.8 km",
+                           "elevation":  "219 m",
+                           "time":  "1h 0m",
+                           "image":  "assets/hero-bike-road.svg",
+                           "chart":  "assets/chart-green.svg",
+                           "gpx":  "adventures/gpx/ride_21906513266.gpx",
+                           "detail":  "adventures/activity_21906513266/activity.json",
+                           "description":  "Auto-generated from adventures/gpx/ride_21906513266.gpx. Replace this with a short summary when the real story is ready."
+                       }
+                   ]
+}

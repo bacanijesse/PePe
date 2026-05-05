@@ -1,0 +1,22 @@
+﻿{
+    "activityId":  "21906513266",
+    "title":  "Ride 21906513266",
+    "type":  "ride",
+    "date":  "Feb 18, 2026",
+    "distance":  "12.8 km",
+    "elevation":  "219 m",
+    "time":  "1h 0m",
+    "image":  "assets/hero-bike-road.svg",
+    "chart":  "assets/chart-green.svg",
+    "gpx":  "adventures/gpx/ride_21906513266.gpx",
+    "youtube":  "",
+    "description":  "Auto-generated from adventures/gpx/ride_21906513266.gpx. Replace this with a short summary when the real story is ready.",
+    "images":  {
+
+               },
+    "story":  [
+                  "This is an auto-generated starter story for activity_21906513266. It was created from the GPX file so the card and detail page can exist before the real photos, videos, and written notes are ready.",
+                  "Replace this text later with the real story of the route: where it started, how the ride or hike felt, what the weather was like, what surprised you, and what another visitor should know before trying it.",
+                  "The map, chart, distance, elevation, and moving time already come from the GPX file. This story section is where the human part of the adventure will live."
+              ]
+}

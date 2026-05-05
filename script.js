@@ -16,7 +16,7 @@ function homeLink(hash) {
 const pageInfo = getPageInfo();
 const shouldResetHomeOnLoad = pageInfo.isHome && !window.location.hash;
 const siteBaseUrl = new URL(".", document.baseURI);
-const dataVersion = "20260505-15";
+const dataVersion = "20260505-16";
 
 if (shouldResetHomeOnLoad && "scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -196,11 +196,22 @@ function getActivityIdFromGpx(gpxPath = "") {
   return fileName.match(/^(?:ride|hike|run)_(\d+)\.gpx$/i)?.[1] || "";
 }
 
+// Gets an activity ID from the explicit field first, then falls back to the GPX filename.
+function getActivityId(item) {
+  return item?.activityId || getActivityIdFromGpx(item?.gpx);
+}
+
 // Builds the correct detail-page URL for an adventure card.
 function getAdventureDetailUrl(item) {
   const detailPage = item.type === "ride" ? "rides.html" : "hikes.html";
-  const activityId = getActivityIdFromGpx(item.gpx);
+  const activityId = getActivityId(item);
   return activityId ? `${detailPage}?activity=${encodeURIComponent(activityId)}` : detailPage;
+}
+
+// Returns the per-activity JSON path for a summary item.
+function getAdventureDetailDataPath(item) {
+  const activityId = getActivityId(item);
+  return item?.detail || (activityId ? `adventures/activity_${activityId}/activity.json` : "");
 }
 
 // Calculates distance in kilometers between two latitude/longitude points.
@@ -528,11 +539,6 @@ function renderGpxCard(item, card) {
     });
 }
 
-// Gets the image list for one activity ID from data/activity-images.json.
-function getActivityImages(data, activityId) {
-  return Array.isArray(data?.activities?.[activityId]) ? data.activities[activityId] : [];
-}
-
 // Gets the YouTube video ID from a normal YouTube link.
 function getYoutubeVideoId(videoUrl) {
   if (!videoUrl) return "";
@@ -715,7 +721,7 @@ function syncAdventureDetailHeight(container) {
 }
 
 // Builds the full ride/hike detail page: text, video, map, chart, and photo carousel.
-function renderAdventureDetail(adventure, container, activityImages = []) {
+function renderAdventureDetail(adventure, container) {
   container.classList.add("activity-detail-layout");
   container.closest(".simple-page")?.classList.add("activity-page");
   container.innerHTML = `
@@ -725,7 +731,7 @@ function renderAdventureDetail(adventure, container, activityImages = []) {
         <h1>${adventure.title}</h1>
         ${renderAdventureMiniStats(adventure)}
         <p>${adventure.description}</p>
-        ${renderActivityImageCarousel(activityImages, adventure.title)}
+        ${renderActivityImageCarousel(adventure.images, adventure.title)}
         <div class="detail-map" id="detailMap"></div>
         <div class="detail-chart-grid" id="detailCharts" hidden></div>
       </div>
@@ -758,7 +764,7 @@ function renderAdventureDetail(adventure, container, activityImages = []) {
     });
 }
 
-// Reads the activity ID from the URL and loads the matching ride or hike into the detail page.
+// Reads the activity ID from the URL, finds its index entry, then loads that activity folder's JSON.
 function initAdventureDetailPage() {
   const detailRoot = document.getElementById("adventureDetail");
   if (!detailRoot) return;
@@ -766,15 +772,12 @@ function initAdventureDetailPage() {
   const activityId = new URLSearchParams(window.location.search).get("activity");
   if (!activityId) return;
 
-  Promise.all([
-    fetchJson("data/adventures.json"),
-    fetchJson("data/activity-images.json").catch(() => ({ activities: {} }))
-  ])
-    .then(([data, imageData]) => {
+  fetchJson("data/adventures-index.json")
+    .then(data => {
       const pageType = detailRoot.dataset.type;
       const items = getDataList(data, "adventures");
       const adventure = items.find(item => {
-        return item.type === pageType && getActivityIdFromGpx(item.gpx) === activityId;
+        return item.type === pageType && getActivityId(item) === activityId;
       });
 
       if (!adventure) {
@@ -789,7 +792,11 @@ function initAdventureDetailPage() {
         return;
       }
 
-      renderAdventureDetail(adventure, detailRoot, getActivityImages(imageData, activityId));
+      const detailPath = getAdventureDetailDataPath(adventure);
+      return fetchJson(detailPath)
+        .then(detailData => {
+          renderAdventureDetail({ ...adventure, ...detailData }, detailRoot);
+        });
     })
     .catch(() => {
       detailRoot.innerHTML = `
@@ -1221,7 +1228,7 @@ function scrollToHashTarget() {
   scrollToSection(target, hash, true);
 }
 
-// Renders adventure cards from data/adventures.json and applies the selected filter.
+// Renders adventure cards from the lightweight adventure index and applies the selected filter.
 function renderCards(filter = "all") {
   if (!cardGrid || !cardTemplate) return;
 
@@ -1285,7 +1292,7 @@ if (heroQuoteText) {
 }
 
 if (cardGrid && cardTemplate) {
-  fetchJson("data/adventures.json")
+  fetchJson("data/adventures-index.json")
     .then(data => {
       adventures = getDataList(data, "adventures");
       renderCards(currentFilter);
@@ -1365,8 +1372,10 @@ function renderDuration(totalMinutes) {
 
 // Loads adventure data and calculates the homepage stats bar totals.
 async function loadAdventureStats() {
+  if (!document.getElementById("totalRides")) return;
+
   try {
-    const adventuresData = await fetchJson("data/adventures.json");
+    const adventuresData = await fetchJson("data/adventures-index.json");
     const adventures = getDataList(adventuresData, "adventures");
 
     let totalRides = 0;

@@ -1,0 +1,40 @@
+﻿{
+    "activityId":  "21904385848",
+    "title":  "Hukou Township Mountain Biking",
+    "type":  "ride",
+    "date":  "Feb 18, 2026",
+    "distance":  "4.2 km",
+    "elevation":  "44 m",
+    "time":  "16m",
+    "image":  "assets/hero-bike-road.svg",
+    "chart":  "assets/chart-green.svg",
+    "gpx":  "adventures/gpx/ride_21904385848.gpx",
+    "youtube":  "https://youtu.be/vO_iSUUSiB0?si=WlL8VYPmN9XxKUvx",
+    "description":  "A short Garmin-recorded mountain bike activity around Hukou Township with a compact climb and quick moving time.",
+    "images":  [
+                   "adventures/activity_21904385848/images/95e3250d28ded79cb79246336e233f5d.webp",
+                   "adventures/activity_21904385848/images/b4032692df8150bf7c08e76db466a267.webp",
+                   "adventures/activity_21904385848/images/fd8397c282080aa4cac77d72229d62f1.webp",
+                   "adventures/activity_21904385848/images/original-45eb5283bf8bee1d82b08eb0488fa425.webp",
+                   "adventures/activity_21904385848/images/original-505d546a74ecd7f683f4ec5fda6d1a76.webp",
+                   "adventures/activity_21904385848/images/original-55a24edfd620472f5d7d63e515ecf551.webp",
+                   "adventures/activity_21904385848/images/original-7dfc34585f45d7f11011641999d0f35f.webp",
+                   "adventures/activity_21904385848/images/original-92442060655064ffb2dabf9786a754d4.webp",
+                   "adventures/activity_21904385848/images/original-93c8ad2ab8184cf994910f6becd51ddf.webp",
+                   "adventures/activity_21904385848/images/original-991070eac85c35ddfb22f2af3e8e2eac.webp",
+                   "adventures/activity_21904385848/images/original-abb1babd5b5ae0b78d9bf867f1f0ebf3.gif",
+                   "adventures/activity_21904385848/images/original-bea4aba25ec8c703198042bcba9f9493.webp",
+                   "adventures/activity_21904385848/images/original-e71795f86f0cb25444a3d629a8e78efe.webp",
+                   "adventures/activity_21904385848/images/original-f2d0c14af6cb7aa095b35ded54d99f6c.webp",
+                   "adventures/activity_21904385848/images/original-fa177dadf7d4a0d8d14d0cb1c24f9531.webp"
+               ],
+    "story":  [
+                  "I started this short Hukou Township ride as a simple shakeout, the kind of route that looks small on the map but still tells you a lot about your legs, your setup, and your mood for the day. Before rolling out, I checked the basics: tire pressure, brakes, chain, water, phone battery, and whether the route file was saved properly. The plan was not to chase a record. The plan was to move cleanly, listen to the bike, and see how the neighborhood roads felt under a mountain bike. Some rides begin with a huge mountain view, but this one began with ordinary streets, quiet corners, and that familiar feeling of clipping in while the day is still deciding what it wants to become.",
+                  "The first part of the ride was easy enough to settle into. I kept the pace controlled and used the opening meters to warm up instead of attacking too early. Hukou has that nice mix of town movement and softer edges, where buildings, small roads, fields, and hills can appear close together. That mix makes a short ride more interesting than the distance suggests. Every turn gives a slightly different rhythm. One minute you are watching for scooters and parked cars, then the next minute the road opens just enough for you to breathe and look ahead. I paid attention to the surface because small cracks, drain covers, gravel, and uneven shoulders can matter more than the climb itself when you are moving through local roads.",
+                  "The climb was compact, but it still asked for patience. A short climb can trick you into pushing too hard because the top feels near, then the grade changes and your breathing catches up with your confidence. I tried to keep the effort smooth, using an easier gear and staying seated for most of it. The elevation gain is not huge, yet it is enough to show up in the legs, especially if you are testing the route after a normal day instead of a full rest day. That is one thing I want this story section to capture later: not only the numbers from the GPS, but the actual feeling of the route. A route can say 44 meters of elevation, but the body remembers where the road tightened, where the wind pressed back, and where the bike felt heavier than expected.",
+                  "Weather and visibility were also part of the ride. It did not need dramatic scenery to be useful. The useful part was noticing how the air felt, where shade appeared, and where the road would be hotter or busier at a different time of day. If I were recommending this route to another rider, I would say to bring enough water even though the distance is short, because short routes are where people often forget basic preparation. I would also suggest starting after enough sleep, not after rushing through the morning, because even an easy ride feels different when your body is rested. A compact test ride is still a ride. You still need attention, patience, and enough awareness to make good decisions around traffic, weather, and road conditions.",
+                  "The best part of this sample route is that it works like a small training note for the whole site. It has a map, a climb, speed changes, heart rate movement, and enough turns to make the charts meaningful. When visitors open the page, they should be able to understand the activity quickly: where it went, how long it took, how hard it was, and what kind of rider might enjoy it. The story should then add the human part. Numbers are helpful, but they cannot explain why a road felt peaceful, why one corner made you slow down, or why a ride felt worth saving even when it was only a few kilometers. That is why this long test story is useful for the design. It forces the page to behave like a real blog entry instead of a demo card.",
+                  "There are also small planning lessons hidden inside a ride like this. I would check the weather before leaving, especially if clouds are building around the hills, because rain can change a relaxed test loop into a slippery ride very quickly. I would let someone know the route if riding alone, even for a short distance, and I would avoid treating familiar roads like they are automatically safe. Familiar roads can make you careless. The better habit is to stay present, scan ahead, and keep enough energy in reserve for the return. I also like using short rides to test what I should bring on longer trips: whether the bag feels balanced, whether the phone mount shakes, whether the bottle is easy to reach, and whether the lights are bright enough.",
+                  "If I returned to this route, I would use it as a warm-up loop, a quick fitness check, or a way to test gear before a bigger ride. I would bring a small repair kit, water, phone, ID, and a light if there were any chance of finishing late. I would also leave a little extra time to stop for photos or notes, because those small details are what turn a GPS file into an actual memory. Next time, I would write down the exact start point, the safest direction to ride, any traffic-heavy spots, and where a beginner should take it slow. I would also note where to rest, where to refill water, and whether the route feels better in the morning or near sunset. For now, this story is doing two jobs: it describes the route and it tests the layout. The page should keep the video at the bottom, let this story breathe, and scroll only inside the story panel when the words grow longer than the available space."
+              ]
+}

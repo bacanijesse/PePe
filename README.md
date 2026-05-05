@@ -12,7 +12,7 @@ The site is built for sharing outdoor adventures: cycling loops, hikes, distance
 - Full-screen homepage sections for Hero, Latest Adventures, Testimonials, and Contact.
 - Light/dark theme support with theme preference saved in the browser.
 - Section backgrounds with parallax behavior on desktop.
-- Dynamic adventure cards loaded from `data/adventures.json`.
+- Dynamic adventure cards loaded from `data/adventures-index.json`.
 - Homepage stats calculated from the adventure data.
 - Random hero quote loaded from `data/quotes.json`.
 - Testimonial carousel loaded from `data/testimonials.json`.
@@ -27,14 +27,17 @@ The site is built for sharing outdoor adventures: cycling loops, hikes, distance
 - `hikes.html` - Placeholder page for future hike logs.
 - `style.css` - All layout, theme, typography, responsive, parallax, card, form, and modal styles.
 - `script.js` - Header/footer rendering, theme toggle, navigation, filters, cards, modal, stats, quotes, and testimonials.
-- `data/adventures.json` - Ride/hike data used for cards and stats.
+- `data/adventures-index.json` - Lightweight ride/hike data used for homepage cards and stats.
+- `adventures/activity_<id>/activity.json` - Full activity details, story, video URL, and gallery image list.
 - `data/testimonials.json` - Story carousel data.
 - `data/quotes.json` - Random homepage quote data.
 - `assets/` - Logo, icons, charts, illustrations, and background images.
 
 ## Editing Data
 
-To add a new adventure, edit `data/adventures.json` and add an item inside the `adventures` array. Use `type: "ride"` or `type: "hike"` so filters and stats work correctly.
+To add a new adventure, create `adventures/activity_<id>/activity.json` for the full story/details, then add a matching summary item to `data/adventures-index.json`. Use `type: "ride"` or `type: "hike"` so filters and stats work correctly.
+
+If the activity starts from a GPX file, run `tools/update-adventures.ps1` after adding the GPX. The script keeps the homepage index and per-activity JSON files in sync while preserving existing stories.
 
 To add a quote, edit `data/quotes.json` and add an item inside the `quotes` array.
 
