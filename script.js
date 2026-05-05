@@ -16,7 +16,7 @@ function homeLink(hash) {
 const pageInfo = getPageInfo();
 const shouldResetHomeOnLoad = pageInfo.isHome && !window.location.hash;
 const siteBaseUrl = new URL(".", document.baseURI);
-const dataVersion = "20260505-14";
+const dataVersion = "20260505-15";
 
 if (shouldResetHomeOnLoad && "scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -27,6 +27,7 @@ function siteUrl(path) {
   return new URL(path, siteBaseUrl).href;
 }
 
+// Fetches JSON data with a version query so GitHub Pages and browsers do not serve stale files.
 function fetchJson(path) {
   const url = new URL(path, siteBaseUrl);
   url.searchParams.set("v", dataVersion);
@@ -154,13 +155,6 @@ const testimonialNext = document.getElementById("testimonialNext");
 const testimonialPage = document.getElementById("testimonialPage");
 const heroQuoteText = document.getElementById("heroQuoteText");
 const heroQuoteAuthor = document.getElementById("heroQuoteAuthor");
-const statElements = {
-  totalRides: document.getElementById("totalRides"),
-  totalHikes: document.getElementById("totalHikes"),
-  totalDistance: document.getElementById("totalDistance"),
-  totalElevation: document.getElementById("totalElevation"),
-  totalTime: document.getElementById("totalTime")
-};
 
 let adventures = [];
 let currentFilter = "all";
@@ -358,14 +352,7 @@ function renderLeafletMap(container, track) {
   }, 250);
 }
 
-// Finds the average value for one GPX metric.
-function getAverageMetric(track, key) {
-  const values = track.map(point => point[key]).filter(value => Number.isFinite(value) && value > 0);
-  if (!values.length) return null;
-
-  return values.reduce((sum, value) => sum + value, 0) / values.length;
-}
-
+// Pulls one chartable metric series from a GPX track and optionally removes zero values.
 function getMetricValues(track, key, onlyPositive = false) {
   return track
     .map(point => ({
@@ -375,6 +362,7 @@ function getMetricValues(track, key, onlyPositive = false) {
     .filter(point => Number.isFinite(point.value) && (!onlyPositive || point.value > 0));
 }
 
+// Renders one compact SVG chart card for elevation, speed, heart rate, or air temperature.
 function renderMetricChart(track, { key, title, unit = "", onlyPositive = false, precision = 0 }) {
   const values = getMetricValues(track, key, onlyPositive);
   if (values.length < 2) return "";
@@ -424,6 +412,7 @@ function renderMetricChart(track, { key, title, unit = "", onlyPositive = false,
   `;
 }
 
+// Renders all available GPX metric charts into the activity detail page.
 function renderRouteCharts(track) {
   const chartGrid = document.getElementById("detailCharts");
   if (!chartGrid || !track.length) return;
@@ -654,6 +643,7 @@ function renderAdventureStory(adventure) {
   `;
 }
 
+// Locks the story panel and video column to the graph-column bottom so long stories scroll internally.
 function syncAdventureDetailHeight(container) {
   const card = container.querySelector(".adventure-detail-card");
   const copy = container.querySelector(".adventure-detail-copy");
@@ -925,6 +915,7 @@ function setActiveNav(sectionId) {
   activeItem?.classList.add("active");
 }
 
+// Checks whether the hero is still visible enough to keep the auto-hide header shown.
 function isHeroVisible() {
   const hero = document.querySelector(".hero");
   if (!hero) return window.scrollY < 40;
@@ -933,20 +924,24 @@ function isHeroVisible() {
   return heroBottom > window.innerHeight * 0.34;
 }
 
+// Reveals the fixed header.
 function showSiteHeader() {
   siteHeader?.classList.remove("is-hidden");
 }
 
+// Hides the fixed header when the visitor is away from the hero and the mobile menu is closed.
 function hideSiteHeader() {
   if (!siteHeader || isHeroVisible() || nav?.classList.contains("open")) return;
   siteHeader.classList.add("is-hidden");
 }
 
+// Delays header hiding so it does not disappear immediately after a navigation click or upward scroll.
 function scheduleHeaderHide(delay = 650) {
   window.clearTimeout(headerHideTimer);
   headerHideTimer = window.setTimeout(hideSiteHeader, delay);
 }
 
+// Shows or hides the fixed header based on scroll direction and hero visibility.
 function updateAutoHideHeader() {
   if (!siteHeader) return;
 
@@ -1073,6 +1068,7 @@ function setAdventureFilter(filter) {
   renderCards(currentFilter);
 }
 
+// Builds the searchable text used by the adventure search box.
 function getAdventureSearchText(item) {
   return [
     item.title,
@@ -1086,6 +1082,7 @@ function getAdventureSearchText(item) {
   ].join(" ").toLowerCase();
 }
 
+// Applies the current type filter and search query to the adventure list.
 function getFilteredAdventures(filter = "all") {
   const query = currentSearch.trim().toLowerCase();
   return adventures.filter(item => {
@@ -1095,6 +1092,7 @@ function getFilteredAdventures(filter = "all") {
   });
 }
 
+// Updates the small adventure count line under the section title.
 function updateAdventureResultCount(count) {
   if (!adventureResultCount) return;
 
@@ -1105,11 +1103,13 @@ function updateAdventureResultCount(count) {
     : `${count} ${plural} ready to explore`;
 }
 
+// Stores the current search text and redraws the adventure cards.
 function updateAdventureSearch(value) {
   currentSearch = value;
   renderCards(currentFilter);
 }
 
+// Renders the planning essentials infographic cards.
 function renderTripEssentials(items) {
   if (!toolkitGrid) return;
 
