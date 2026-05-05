@@ -67,10 +67,39 @@ function Get-ActivityImages {
     return @()
   }
 
-  return @(Get-ChildItem -LiteralPath $imageDirectory -File |
+  $images = @(Get-ChildItem -LiteralPath $imageDirectory -File |
     Where-Object { $imageExtensions -contains $_.Extension.ToLowerInvariant() } |
     Sort-Object Name |
     ForEach-Object { Get-RelativePath -Path $_.FullName })
+
+  return [object[]]$images
+}
+
+function Get-PreparedWith {
+  param(
+    [object]$ExistingDetail,
+    [object[]]$Essentials
+  )
+
+  if ($ExistingDetail.preparedWith) {
+    return @($ExistingDetail.preparedWith)
+  }
+
+  return @($Essentials | Select-Object -First 6)
+}
+
+function Write-JsonFile {
+  param(
+    [string]$Path,
+    [object]$Value,
+    [int]$Depth = 8
+  )
+
+  $json = $Value | ConvertTo-Json -Depth $Depth
+  $json = $json -replace '("images"\s*:\s*)null', '$1[]'
+  $json = $json -replace '("preparedWith"\s*:\s*)null', '$1[]'
+  $encoding = New-Object System.Text.UTF8Encoding $false
+  [IO.File]::WriteAllText((Resolve-Path -LiteralPath (Split-Path -Parent $Path) | Join-Path -ChildPath (Split-Path -Leaf $Path)), $json, $encoding)
 }
 
 function Get-GpxSummary {
@@ -152,6 +181,13 @@ foreach ($item in @($existingIndex.adventures)) {
   }
 }
 
+$essentialsPath = "data/trip-essentials.json"
+$planningEssentials = if (Test-Path -LiteralPath $essentialsPath) {
+  @((Get-Content -LiteralPath $essentialsPath -Raw | ConvertFrom-Json).essentials)
+} else {
+  @()
+}
+
 $adventures = @()
 Get-ChildItem -LiteralPath $GpxRoot -File -Filter "*.gpx" | Sort-Object Name | ForEach-Object {
   $summary = Get-GpxSummary -File $_
@@ -192,7 +228,8 @@ Get-ChildItem -LiteralPath $GpxRoot -File -Filter "*.gpx" | Sort-Object Name | F
     } else {
       "Auto-generated from $($summary.Gpx). Replace this with a short summary when the real story is ready."
     }
-    images = Get-ActivityImages -ActivityDirectory $activityDirectory
+    images = [object[]](Get-ActivityImages -ActivityDirectory $activityDirectory)
+    preparedWith = Get-PreparedWith -ExistingDetail $existingDetail -Essentials $planningEssentials
     story = if ($existingDetail.story) {
       @($existingDetail.story)
     } else {
@@ -219,7 +256,7 @@ Get-ChildItem -LiteralPath $GpxRoot -File -Filter "*.gpx" | Sort-Object Name | F
     description = $activity.description
   }
 
-  $activity | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $activityPath -Encoding UTF8
+  Write-JsonFile -Path $activityPath -Value $activity
   $adventures += $indexItem
 }
 
@@ -228,5 +265,5 @@ $manifest = [ordered]@{
   adventures = $adventures
 }
 
-$manifest | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $IndexPath -Encoding UTF8
+Write-JsonFile -Path $IndexPath -Value $manifest
 Write-Host "Updated $IndexPath and $($adventures.Count) activity detail file(s)."

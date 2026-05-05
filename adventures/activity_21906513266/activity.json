@@ -1,4 +1,4 @@
-﻿{
+{
     "activityId":  "21906513266",
     "title":  "Ride 21906513266",
     "type":  "ride",
@@ -11,9 +11,39 @@
     "gpx":  "adventures/gpx/ride_21906513266.gpx",
     "youtube":  "",
     "description":  "Auto-generated from adventures/gpx/ride_21906513266.gpx. Replace this with a short summary when the real story is ready.",
-    "images":  {
-
-               },
+    "images":  [],
+    "preparedWith":  [
+                         {
+                             "icon":  "Zz",
+                             "title":  "Rest \u0026 Readiness",
+                             "description":  "Get enough sleep before the hike or ride, eat properly, and start only when your body feels ready for the route."
+                         },
+                         {
+                             "icon":  "H2O",
+                             "title":  "Food \u0026 Water",
+                             "description":  "Enough water, electrolytes, trail snacks, emergency calories, and a plan for refilling if possible."
+                         },
+                         {
+                             "icon":  "Map",
+                             "title":  "Navigation",
+                             "description":  "Save the route offline, bring a map or backup navigation, and tell someone your planned route and expected return time."
+                         },
+                         {
+                             "icon":  "Kit",
+                             "title":  "Repair \u0026 Weather",
+                             "description":  "Basic tools, spare tube or patch kit, rain layer, sun protection, and clothing for changing conditions."
+                         },
+                         {
+                             "icon":  "Bat",
+                             "title":  "Power",
+                             "description":  "Extra batteries, charged phone, lights, GPS or watch power, and a small power bank for longer days."
+                         },
+                         {
+                             "icon":  "ID",
+                             "title":  "Emergency Info",
+                             "description":  "Carry identification, emergency contact details, a little cash, and any important medical information in an easy-to-find place."
+                         }
+                     ],
     "story":  [
                   "This is an auto-generated starter story for activity_21906513266. It was created from the GPX file so the card and detail page can exist before the real photos, videos, and written notes are ready.",
                   "Replace this text later with the real story of the route: where it started, how the ride or hike felt, what the weather was like, what surprised you, and what another visitor should know before trying it.",

@@ -1,8 +1,11 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: bacanijesse/PePe
   branch: main
 
 local_backend: true
+site_url: "https://bacanijesse.github.io/PePe/"
+display_url: "https://bacanijesse.github.io/PePe/"
 
 media_folder: "assets/uploads"
 public_folder: "assets/uploads"
@@ -40,6 +43,76 @@ collections:
               - { label: "GPX File Path", name: "gpx", widget: "string", hint: "Example: adventures/gpx/ride_123.gpx" }
               - { label: "Detail JSON Path", name: "detail", widget: "string", hint: "Example: adventures/activity_123/activity.json" }
               - { label: "Description", name: "description", widget: "text" }
+
+      - name: "activity_21904385848"
+        label: "Activity 21904385848"
+        file: "adventures/activity_21904385848/activity.json"
+        format: "json"
+        fields:
+          - { label: "Activity ID", name: "activityId", widget: "string" }
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Type", name: "type", widget: "select", options: ["ride", "hike"] }
+          - { label: "Date", name: "date", widget: "string" }
+          - { label: "Distance", name: "distance", widget: "string" }
+          - { label: "Elevation", name: "elevation", widget: "string" }
+          - { label: "Moving Time", name: "time", widget: "string" }
+          - { label: "Card Image", name: "image", widget: "image", required: false }
+          - { label: "Chart Image", name: "chart", widget: "image", required: false }
+          - { label: "GPX File Path", name: "gpx", widget: "string" }
+          - { label: "YouTube URL", name: "youtube", widget: "string", required: false }
+          - { label: "Description", name: "description", widget: "text" }
+          - label: "Gallery Images"
+            name: "images"
+            widget: "list"
+            required: false
+            field: { label: "Image Path", name: "path", widget: "string" }
+          - label: "Prepared With"
+            name: "preparedWith"
+            widget: "list"
+            required: false
+            fields:
+              - { label: "Icon", name: "icon", widget: "string" }
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Description", name: "description", widget: "text", required: false }
+          - label: "Story Paragraphs"
+            name: "story"
+            widget: "list"
+            field: { label: "Paragraph", name: "paragraph", widget: "text" }
+
+      - name: "activity_21906513266"
+        label: "Activity 21906513266"
+        file: "adventures/activity_21906513266/activity.json"
+        format: "json"
+        fields:
+          - { label: "Activity ID", name: "activityId", widget: "string" }
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Type", name: "type", widget: "select", options: ["ride", "hike"] }
+          - { label: "Date", name: "date", widget: "string" }
+          - { label: "Distance", name: "distance", widget: "string" }
+          - { label: "Elevation", name: "elevation", widget: "string" }
+          - { label: "Moving Time", name: "time", widget: "string" }
+          - { label: "Card Image", name: "image", widget: "image", required: false }
+          - { label: "Chart Image", name: "chart", widget: "image", required: false }
+          - { label: "GPX File Path", name: "gpx", widget: "string" }
+          - { label: "YouTube URL", name: "youtube", widget: "string", required: false }
+          - { label: "Description", name: "description", widget: "text" }
+          - label: "Gallery Images"
+            name: "images"
+            widget: "list"
+            required: false
+            field: { label: "Image Path", name: "path", widget: "string" }
+          - label: "Prepared With"
+            name: "preparedWith"
+            widget: "list"
+            required: false
+            fields:
+              - { label: "Icon", name: "icon", widget: "string" }
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Description", name: "description", widget: "text", required: false }
+          - label: "Story Paragraphs"
+            name: "story"
+            widget: "list"
+            field: { label: "Paragraph", name: "paragraph", widget: "text" }
 
       - name: "quotes"
         label: "Hero Quotes"

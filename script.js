@@ -16,7 +16,7 @@ function homeLink(hash) {
 const pageInfo = getPageInfo();
 const shouldResetHomeOnLoad = pageInfo.isHome && !window.location.hash;
 const siteBaseUrl = new URL(".", document.baseURI);
-const dataVersion = "20260505-16";
+const dataVersion = "20260505-18";
 
 if (shouldResetHomeOnLoad && "scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -160,6 +160,7 @@ let adventures = [];
 let currentFilter = "all";
 let currentSearch = "";
 let testimonials = [];
+let tripEssentials = [];
 let currentTestimonialPage = 0;
 const testimonialsPerPage = 3;
 const gpxTrackCache = new Map();
@@ -199,6 +200,18 @@ function getActivityIdFromGpx(gpxPath = "") {
 // Gets an activity ID from the explicit field first, then falls back to the GPX filename.
 function getActivityId(item) {
   return item?.activityId || getActivityIdFromGpx(item?.gpx);
+}
+
+// Gets the prepared essentials stored in an activity folder's JSON file.
+function getAdventureEssentials(item) {
+  if (Array.isArray(item?.preparedWith) && item.preparedWith.length) {
+    return item.preparedWith.map((essential, index) => ({
+      ...essential,
+      number: String(index + 1).padStart(2, "0")
+    }));
+  }
+
+  return [];
 }
 
 // Builds the correct detail-page URL for an adventure card.
@@ -627,6 +640,25 @@ function renderAdventureMiniStats(adventure) {
     <div class="adventure-mini-stats" aria-label="Activity summary">
       <span><strong>${adventure.date}</strong><small>Date</small></span>
       <span><strong>${adventure.distance}</strong><small>Distance</small></span>
+      <span><strong>${adventure.time}</strong><small>Moving Time</small></span>
+    </div>
+  `;
+}
+
+// Shows the planning icons connected to an adventure card or detail page.
+function renderAdventureEssentialIcons(adventure, compact = false) {
+  const essentials = getAdventureEssentials(adventure).slice(0, 6);
+  if (!essentials.length) return "";
+
+  return `
+    <div class="${compact ? "card-essential-icons" : "adventure-essential-icons"}" aria-label="Suggested essentials">
+      <strong>Prepared with:</strong>
+      ${essentials.map(item => `
+        <span class="adventure-essential-icon" title="${item.number} ${item.title || "Essential"}">
+          <span aria-hidden="true">${item.icon || "✓"}</span>
+          <small>${item.title || "Essential"}</small>
+        </span>
+      `).join("")}
     </div>
   `;
 }
@@ -730,6 +762,7 @@ function renderAdventureDetail(adventure, container) {
         <p class="eyebrow">${adventure.type}</p>
         <h1>${adventure.title}</h1>
         ${renderAdventureMiniStats(adventure)}
+        ${renderAdventureEssentialIcons(adventure)}
         <p>${adventure.description}</p>
         ${renderActivityImageCarousel(adventure.images, adventure.title)}
         <div class="detail-map" id="detailMap"></div>
@@ -792,8 +825,7 @@ function initAdventureDetailPage() {
         return;
       }
 
-      const detailPath = getAdventureDetailDataPath(adventure);
-      return fetchJson(detailPath)
+      return fetchJson(getAdventureDetailDataPath(adventure))
         .then(detailData => {
           renderAdventureDetail({ ...adventure, ...detailData }, detailRoot);
         });
@@ -1121,6 +1153,7 @@ function renderTripEssentials(items) {
   if (!toolkitGrid) return;
 
   const essentials = Array.isArray(items) && items.length ? items : [];
+  tripEssentials = essentials;
   toolkitGrid.innerHTML = essentials.map((item, index) => `
     <article class="toolkit-card">
       <span class="toolkit-icon" aria-hidden="true">${item.icon || "✓"}</span>
@@ -1129,6 +1162,10 @@ function renderTripEssentials(items) {
       <p>${item.description || ""}</p>
     </article>
   `).join("");
+
+  if (cardGrid && cardTemplate && adventures.length) {
+    renderCards(currentFilter);
+  }
 }
 
 // Returns the inline SVG icon for a testimonial social platform.
@@ -1262,6 +1299,7 @@ function renderCards(filter = "all") {
     clone.querySelector(".distance").textContent = item.distance;
     clone.querySelector("h3").textContent = item.title;
     clone.querySelector(".card-description").textContent = item.description;
+    clone.querySelector(".card-essential-icons").outerHTML = renderAdventureEssentialIcons(item, true);
     clone.querySelector(".elevation").textContent = item.elevation;
     clone.querySelector(".time").textContent = item.time;
 
@@ -1294,7 +1332,16 @@ if (heroQuoteText) {
 if (cardGrid && cardTemplate) {
   fetchJson("data/adventures-index.json")
     .then(data => {
-      adventures = getDataList(data, "adventures");
+      const summaries = getDataList(data, "adventures");
+      return Promise.all(summaries.map(item => {
+        const detailPath = getAdventureDetailDataPath(item);
+        return detailPath
+          ? fetchJson(detailPath).then(detail => ({ ...item, ...detail })).catch(() => item)
+          : Promise.resolve(item);
+      }));
+    })
+    .then(items => {
+      adventures = items;
       renderCards(currentFilter);
       scrollToHashTarget();
     })
