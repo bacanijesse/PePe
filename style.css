@@ -687,13 +687,12 @@ body.dark-mode .stat-item strong {
 .map-section,
 .info-section,
 .contact-section {
-  height: 100svh;
   min-height: 100svh;
   padding: clamp(28px, 5vh, 64px) 0;
   background: transparent;
   border-top: 1px solid var(--section-divider);
   scroll-margin-top: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .adventures-section,
@@ -2071,7 +2070,6 @@ body.dark-mode .adventure-mini-stats strong {
   .map-section,
   .info-section,
   .contact-section {
-    height: 100svh;
     min-height: 100svh;
     background: transparent;
   }
