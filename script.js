@@ -45,6 +45,7 @@ function renderSiteHeader() {
 
       <nav class="nav-links" id="mainNav" aria-label="Main navigation">
         <a class="${isHome ? "active" : ""}" href="${homeLink("#top")}" data-nav-section="top">Home</a>
+        <a href="${homeLink("#Toolkit")}" data-nav-section="Toolkit">Planning</a>
         <div class="nav-dropdown" id="adventureDropdown">
           <button class="nav-dropdown-button" id="adventureMenuButton" type="button" aria-expanded="false" aria-controls="adventureMenu" data-nav-section="Adventures">
             Adventures
@@ -114,17 +115,21 @@ renderSiteFooter();
 
 const body = document.body;
 const themeToggle = document.getElementById("themeToggle");
+const siteHeader = document.querySelector(".site-header");
 const menuButton = document.getElementById("menuButton");
 const nav = document.getElementById("mainNav");
 const navLinks = document.querySelectorAll(".nav-links a");
 const cardGrid = document.getElementById("cardGrid");
 const cardTemplate = document.getElementById("cardTemplate");
 const filters = document.querySelectorAll(".filter");
+const adventureSearch = document.getElementById("adventureSearch");
+const adventureResultCount = document.getElementById("adventureResultCount");
 const adventureDropdown = document.getElementById("adventureDropdown");
 const adventureMenuButton = document.getElementById("adventureMenuButton");
 const navTrackedItems = document.querySelectorAll("[data-nav-section]");
 const testimonialCarousel = document.getElementById("testimonialCarousel");
 const testimonialTemplate = document.getElementById("testimonialTemplate");
+const toolkitGrid = document.getElementById("toolkitGrid");
 const testimonialPrev = document.getElementById("testimonialPrev");
 const testimonialNext = document.getElementById("testimonialNext");
 const testimonialPage = document.getElementById("testimonialPage");
@@ -140,10 +145,13 @@ const statElements = {
 
 let adventures = [];
 let currentFilter = "all";
+let currentSearch = "";
 let testimonials = [];
 let currentTestimonialPage = 0;
 const testimonialsPerPage = 3;
 const gpxTrackCache = new Map();
+let lastScrollY = window.scrollY;
+let headerHideTimer = null;
 
 if (shouldResetHomeOnLoad) {
   history.replaceState(null, "", window.location.pathname || "index.html");
@@ -736,6 +744,7 @@ menuButton?.addEventListener("click", () => {
 
 adventureMenuButton?.addEventListener("click", event => {
   event.stopPropagation();
+  adventureDropdown?.classList.remove("is-click-closed");
 
   if (!getPageInfo().isHome) {
     window.location.href = "index.html#Adventures";
@@ -749,6 +758,7 @@ adventureMenuButton?.addEventListener("click", event => {
 document.addEventListener("click", event => {
   if (!adventureDropdown?.contains(event.target)) {
     adventureDropdown?.classList.remove("open");
+    adventureDropdown?.classList.remove("is-click-closed");
     adventureMenuButton?.setAttribute("aria-expanded", "false");
   }
 });
@@ -762,17 +772,62 @@ function clearNavActive() {
 // Marks the navigation item that matches the current section.
 function setActiveNav(sectionId) {
   clearNavActive();
+  if (sectionId === "Adventures") {
+    adventureMenuButton?.classList.add("active");
+    return;
+  }
+
   const activeItem = Array.from(navTrackedItems).find(item => item.dataset.navSection === sectionId);
   activeItem?.classList.add("active");
 }
 
-// Smoothly scrolls to a section while accounting for the fixed header height.
+function isHeroVisible() {
+  const hero = document.querySelector(".hero");
+  if (!hero) return window.scrollY < 40;
+
+  const heroBottom = hero.getBoundingClientRect().bottom;
+  return heroBottom > window.innerHeight * 0.34;
+}
+
+function showSiteHeader() {
+  siteHeader?.classList.remove("is-hidden");
+}
+
+function hideSiteHeader() {
+  if (!siteHeader || isHeroVisible() || nav?.classList.contains("open")) return;
+  siteHeader.classList.add("is-hidden");
+}
+
+function scheduleHeaderHide(delay = 650) {
+  window.clearTimeout(headerHideTimer);
+  headerHideTimer = window.setTimeout(hideSiteHeader, delay);
+}
+
+function updateAutoHideHeader() {
+  if (!siteHeader) return;
+
+  const currentY = window.scrollY;
+  const isScrollingUp = currentY < lastScrollY - 4;
+  const isScrollingDown = currentY > lastScrollY + 4;
+  lastScrollY = currentY;
+
+  if (isHeroVisible() || isScrollingUp || currentY < 12) {
+    showSiteHeader();
+    if (!isHeroVisible() && isScrollingUp) scheduleHeaderHide(1100);
+    return;
+  }
+
+  if (isScrollingDown) {
+    hideSiteHeader();
+  }
+}
+
+// Smoothly scrolls to a section without reserving space for the overlay header.
 function scrollToSection(target, hash, replaceHash = false) {
   if (!target) return;
 
   requestAnimationFrame(() => {
-    const headerOffset = document.querySelector(".site-header")?.offsetHeight || 0;
-    const targetTop = target.getBoundingClientRect().top + window.scrollY - headerOffset + 2;
+    const targetTop = target.getBoundingClientRect().top + window.scrollY;
     window.scrollTo({ top: Math.max(0, targetTop), behavior: "smooth" });
   });
 
@@ -795,13 +850,17 @@ navLinks.forEach(link => {
 
     if (adventureFilter) {
       adventureMenuButton?.classList.add("active");
+      adventureDropdown?.classList.add("is-click-closed");
+      window.setTimeout(() => adventureDropdown?.classList.remove("is-click-closed"), 450);
       setAdventureFilter(adventureFilter);
     } else {
+      adventureDropdown?.classList.remove("is-click-closed");
       link.classList.add("active");
     }
 
     if (href === "#top") {
       event.preventDefault();
+      showSiteHeader();
       window.scrollTo({ top: 0, behavior: "smooth" });
       history.replaceState(null, "", "#top");
     } else if (href?.startsWith("#")) {
@@ -809,10 +868,23 @@ navLinks.forEach(link => {
       if (target) {
         event.preventDefault();
         scrollToSection(target, href);
+        scheduleHeaderHide(900);
       }
     }
   });
 });
+
+siteHeader?.addEventListener("mouseenter", showSiteHeader);
+siteHeader?.addEventListener("focusin", showSiteHeader);
+
+document.addEventListener("pointermove", event => {
+  if (event.clientY <= 18) {
+    showSiteHeader();
+  }
+});
+
+window.addEventListener("scroll", updateAutoHideHeader, { passive: true });
+updateAutoHideHeader();
 
 // Watches scroll position and updates the active navigation item on the homepage.
 function initScrollSpy() {
@@ -820,6 +892,7 @@ function initScrollSpy() {
 
   const watchedSections = [
     { id: "top", element: document.querySelector(".hero") },
+    { id: "Toolkit", element: document.getElementById("Toolkit") },
     { id: "Adventures", element: document.getElementById("Adventures") },
     { id: "Testimonials", element: document.getElementById("Testimonials") },
     { id: "contact", element: document.getElementById("contact") }
@@ -827,12 +900,12 @@ function initScrollSpy() {
 
   // Chooses the section currently closest to the visitor's reading position.
   function updateScrollSpy() {
-    const headerOffset = document.querySelector(".site-header")?.offsetHeight || 0;
-    const readingLine = window.scrollY + headerOffset + window.innerHeight * 0.32;
+    const readingLine = window.scrollY + Math.min(window.innerHeight * 0.18, 160);
     let currentSection = "top";
 
     watchedSections.forEach(item => {
-      if (item.element.offsetTop <= readingLine) {
+      const sectionTop = item.element.getBoundingClientRect().top + window.scrollY;
+      if (sectionTop <= readingLine) {
         currentSection = item.id;
       }
     });
@@ -854,6 +927,57 @@ function setAdventureFilter(filter) {
     button.classList.toggle("active", button.dataset.filter === filter);
   });
   renderCards(currentFilter);
+}
+
+function getAdventureSearchText(item) {
+  return [
+    item.title,
+    item.type,
+    item.date,
+    item.distance,
+    item.elevation,
+    item.time,
+    item.description,
+    ...(Array.isArray(item.story) ? item.story : [])
+  ].join(" ").toLowerCase();
+}
+
+function getFilteredAdventures(filter = "all") {
+  const query = currentSearch.trim().toLowerCase();
+  return adventures.filter(item => {
+    const matchesFilter = filter === "all" || item.type === filter;
+    const matchesSearch = !query || getAdventureSearchText(item).includes(query);
+    return matchesFilter && matchesSearch;
+  });
+}
+
+function updateAdventureResultCount(count) {
+  if (!adventureResultCount) return;
+
+  const typeLabel = currentFilter === "all" ? "adventure" : currentFilter;
+  const plural = count === 1 ? typeLabel : `${typeLabel}s`;
+  adventureResultCount.textContent = currentSearch
+    ? `${count} matching ${plural}`
+    : `${count} ${plural} ready to explore`;
+}
+
+function updateAdventureSearch(value) {
+  currentSearch = value;
+  renderCards(currentFilter);
+}
+
+function renderTripEssentials(items) {
+  if (!toolkitGrid) return;
+
+  const essentials = Array.isArray(items) && items.length ? items : [];
+  toolkitGrid.innerHTML = essentials.map((item, index) => `
+    <article class="toolkit-card">
+      <span class="toolkit-icon" aria-hidden="true">${item.icon || "✓"}</span>
+      <span class="toolkit-number">${String(index + 1).padStart(2, "0")}</span>
+      <h3>${item.title || "Essential"}</h3>
+      <p>${item.description || ""}</p>
+    </article>
+  `).join("");
 }
 
 // Returns the inline SVG icon for a testimonial social platform.
@@ -958,7 +1082,18 @@ function renderCards(filter = "all") {
   if (!cardGrid || !cardTemplate) return;
 
   cardGrid.innerHTML = "";
-  const filtered = filter === "all" ? adventures : adventures.filter(item => item.type === filter);
+  const filtered = getFilteredAdventures(filter);
+  updateAdventureResultCount(filtered.length);
+
+  if (!filtered.length) {
+    cardGrid.innerHTML = `
+      <div class="empty-state">
+        <h3>No adventures found</h3>
+        <p>Try a different keyword or switch back to all adventures.</p>
+      </div>
+    `;
+    return;
+  }
 
   filtered.forEach(item => {
     const clone = cardTemplate.content.cloneNode(true);
@@ -990,6 +1125,10 @@ filters.forEach(button => {
   });
 });
 
+adventureSearch?.addEventListener("input", () => {
+  updateAdventureSearch(adventureSearch.value);
+});
+
 if (heroQuoteText) {
   fetch("data/quotes.json")
     .then(response => response.json())
@@ -1013,6 +1152,7 @@ if (cardGrid && cardTemplate) {
     .catch(() => {
       adventures = [];
       cardGrid.innerHTML = "<p>Could not load adventure data. Open through a local server or upload to GitHub Pages.</p>";
+      updateAdventureResultCount(0);
       scrollToHashTarget();
     });
 }
@@ -1034,6 +1174,15 @@ if (testimonialCarousel && testimonialTemplate) {
       if (testimonialPrev) testimonialPrev.disabled = true;
       if (testimonialNext) testimonialNext.disabled = true;
       scrollToHashTarget();
+    });
+}
+
+if (toolkitGrid) {
+  fetch("data/trip-essentials.json")
+    .then(response => response.json())
+    .then(data => renderTripEssentials(getDataList(data, "essentials")))
+    .catch(() => {
+      toolkitGrid.innerHTML = "<p>Could not load trip essentials.</p>";
     });
 }
 

@@ -87,3 +87,21 @@ collections:
                   - { label: "Facebook", name: "facebook", widget: "string", required: false }
                   - { label: "YouTube", name: "youtube", widget: "string", required: false }
                   - { label: "TikTok", name: "tiktok", widget: "string", required: false }
+
+      - name: "trip_essentials"
+        label: "Trip Essentials"
+        file: "data/trip-essentials.json"
+        format: "json"
+        fields:
+          - label: "Comment"
+            name: "_comment"
+            widget: "hidden"
+            default: "Trip essentials shown in the Planning section on the homepage."
+          - label: "Essentials"
+            name: "essentials"
+            widget: "list"
+            summary: "{{fields.icon}} {{fields.title}}"
+            fields:
+              - { label: "Icon", name: "icon", widget: "string", hint: "Use a short emoji or symbol, for example 🔋 or ✚." }
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Description", name: "description", widget: "text" }

@@ -29,12 +29,13 @@
           </div>
         </div>
 
-        <blockquote class="hero-quote">
-          <span id="heroQuoteText">“The best views come after the hardest climbs.”</span>
-          <cite id="heroQuoteAuthor">Jesse</cite>
-        </blockquote>
-
         <!-- Stats bar: quick numbers that summarize the rides, hikes, distance, elevation, and time. -->
+        <div class="hero-quote-wrapper">
+          <blockquote class="hero-quote">
+            <span id="heroQuoteText">“The best views come after the hardest climbs.”</span>
+            <span class="hero-quote-author" id="heroQuoteAuthor">Jesse</span>
+          </blockquote>
+        </div>
         <div class="hero-stats" aria-label="Adventure statistics">
           <div class="stats-bar">
             <article class="stat-item"><div class="stat-icon">🚴</div><div><strong id="totalRides">0 <small class="stat-value-unit">Rides</small></strong><span>Logged</span></div></article>
@@ -47,20 +48,38 @@
       </div>
     </section>
 
+    <section class="toolkit-section" id="Toolkit">
+      <div class="container">
+        <div class="section-title-row">
+          <div>
+            <h2>Trip essentials before the route</h2>
+            <div class="accent-line"></div>
+          </div>
+        </div>
+        <div class="toolkit-grid" id="toolkitGrid"></div>
+      </div>
+    </section>
+
     <!-- Adventures section: this area shows ride and hike cards loaded by JavaScript from the data file. -->
     <section class="adventures-section" id="Adventures">
       <div class="container">
-        <div class="section-title-row">
+        <div class="section-title-row adventure-title-row">
           <div>
             <h2>Latest Adventures</h2>
             <div class="accent-line"></div>
           </div>
-          <div class="filter-buttons" aria-label="Filter adventure cards">
-            <button class="filter active" data-filter="all">All</button>
-            <button class="filter" data-filter="ride">Rides</button>
-            <button class="filter" data-filter="hike">Hikes</button>
+          <div class="adventure-controls">
+            <div class="filter-buttons" aria-label="Filter adventure cards">
+              <button class="filter active" data-filter="all">All</button>
+              <button class="filter" data-filter="ride">Rides</button>
+              <button class="filter" data-filter="hike">Hikes</button>
+            </div>
+            <div class="adventure-search" role="search" aria-label="Search routes">
+              <input id="adventureSearch" type="search" placeholder="Search routes" autocomplete="off" aria-label="Search routes" />
+            </div>
           </div>
         </div>
+        <p class="finder-count" id="adventureResultCount">Loading adventures...</p>
 
         <div class="card-grid" id="cardGrid"></div>
       </div>
