@@ -2,42 +2,42 @@
   "_comment": "Trip essentials shown in the Planning section on the homepage.",
   "essentials": [
     {
-      "icon": "Zz",
+      "icon": "\ud83d\ude34",
       "title": "Rest & Readiness",
       "description": "Get enough sleep before the hike or ride, eat properly, and start only when your body feels ready for the route."
     },
     {
-      "icon": "H2O",
+      "icon": "\ud83d\udca7",
       "title": "Food & Water",
       "description": "Enough water, electrolytes, trail snacks, emergency calories, and a plan for refilling if possible."
     },
     {
-      "icon": "+",
+      "icon": "\u271a",
       "title": "First Aid",
       "description": "Bandages, antiseptic wipes, blister care, pain relief, and any personal medication you may need."
     },
     {
-      "icon": "Map",
+      "icon": "\ud83e\udded",
       "title": "Navigation",
       "description": "Save the route offline, bring a map or backup navigation, and tell someone your planned route and expected return time."
     },
     {
-      "icon": "Kit",
+      "icon": "\ud83d\udee0",
       "title": "Repair & Weather",
       "description": "Basic tools, spare tube or patch kit, rain layer, sun protection, and clothing for changing conditions."
     },
     {
-      "icon": "Bat",
+      "icon": "\ud83d\udd0b",
       "title": "Power",
       "description": "Extra batteries, charged phone, lights, GPS or watch power, and a small power bank for longer days."
     },
     {
-      "icon": "Tent",
+      "icon": "\u26fa",
       "title": "Overnight Kit",
       "description": "For overnight trips, bring a tent or shelter, sleeping gear, extra warm layers, a headlamp, and enough food and water for the next day."
     },
     {
-      "icon": "ID",
+      "icon": "\ud83e\udeaa",
       "title": "Emergency Info",
       "description": "Carry identification, emergency contact details, a little cash, and any important medical information in an easy-to-find place."
     }

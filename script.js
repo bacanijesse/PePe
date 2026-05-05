@@ -16,7 +16,7 @@ function homeLink(hash) {
 const pageInfo = getPageInfo();
 const shouldResetHomeOnLoad = pageInfo.isHome && !window.location.hash;
 const siteBaseUrl = new URL(".", document.baseURI);
-const dataVersion = "20260505-18";
+const dataVersion = "20260505-19";
 
 if (shouldResetHomeOnLoad && "scrollRestoration" in history) {
   history.scrollRestoration = "manual";

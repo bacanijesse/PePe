@@ -14,32 +14,32 @@
     "images":  [],
     "preparedWith":  [
                          {
-                             "icon":  "Zz",
+                             "icon":  "\ud83d\ude34",
                              "title":  "Rest \u0026 Readiness",
                              "description":  "Get enough sleep before the hike or ride, eat properly, and start only when your body feels ready for the route."
                          },
                          {
-                             "icon":  "H2O",
+                             "icon":  "\ud83d\udca7",
                              "title":  "Food \u0026 Water",
                              "description":  "Enough water, electrolytes, trail snacks, emergency calories, and a plan for refilling if possible."
                          },
                          {
-                             "icon":  "Map",
+                             "icon":  "\ud83e\udded",
                              "title":  "Navigation",
                              "description":  "Save the route offline, bring a map or backup navigation, and tell someone your planned route and expected return time."
                          },
                          {
-                             "icon":  "Kit",
+                             "icon":  "\ud83d\udee0",
                              "title":  "Repair \u0026 Weather",
                              "description":  "Basic tools, spare tube or patch kit, rain layer, sun protection, and clothing for changing conditions."
                          },
                          {
-                             "icon":  "Bat",
+                             "icon":  "\ud83d\udd0b",
                              "title":  "Power",
                              "description":  "Extra batteries, charged phone, lights, GPS or watch power, and a small power bank for longer days."
                          },
                          {
-                             "icon":  "ID",
+                             "icon":  "\ud83e\udeaa",
                              "title":  "Emergency Info",
                              "description":  "Carry identification, emergency contact details, a little cash, and any important medical information in an easy-to-find place."
                          }
