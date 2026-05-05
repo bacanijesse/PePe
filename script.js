@@ -16,7 +16,7 @@ function homeLink(hash) {
 const pageInfo = getPageInfo();
 const shouldResetHomeOnLoad = pageInfo.isHome && !window.location.hash;
 const siteBaseUrl = new URL(".", document.baseURI);
-const dataVersion = "20260505-20";
+const dataVersion = "20260505-21";
 const githubRepoOwner = "bacanijesse";
 const githubRepoName = "PePe";
 const githubBranch = "main";
@@ -258,10 +258,24 @@ function getActivityId(item) {
 // Gets the prepared essentials stored in an activity folder's JSON file.
 function getAdventureEssentials(item) {
   if (Array.isArray(item?.preparedWith) && item.preparedWith.length) {
-    return item.preparedWith.map((essential, index) => ({
-      ...essential,
-      number: String(index + 1).padStart(2, "0")
-    }));
+    return item.preparedWith
+      .map((entry, index) => {
+        const essentialNumber = Number(typeof entry === "object" ? entry.number : entry);
+
+        if (Number.isInteger(essentialNumber)) {
+          const matchedEssential = tripEssentials[essentialNumber - 1];
+          return matchedEssential ? {
+            ...matchedEssential,
+            number: String(essentialNumber).padStart(2, "0")
+          } : null;
+        }
+
+        return {
+          ...entry,
+          number: String(index + 1).padStart(2, "0")
+        };
+      })
+      .filter(Boolean);
   }
 
   return [];
@@ -605,6 +619,14 @@ function renderGpxCard(item, card) {
     });
 }
 
+// Keeps the card visual stable when a new post has no GPX map yet.
+function setAdventureCardImage(item, image) {
+  if (!image) return;
+
+  image.src = item.image || "assets/hero-bike-road.svg";
+  image.alt = item.title;
+}
+
 // Gets the YouTube video ID from a normal YouTube link.
 function getYoutubeVideoId(videoUrl) {
   if (!videoUrl) return "";
@@ -858,8 +880,12 @@ function initAdventureDetailPage() {
   const activityId = new URLSearchParams(window.location.search).get("activity");
   if (!activityId) return;
 
-  loadAdventureItems()
-    .then(items => {
+  Promise.all([
+    fetchJson("data/trip-essentials.json").then(data => getDataList(data, "essentials")).catch(() => []),
+    loadAdventureItems()
+  ])
+    .then(([essentials, items]) => {
+      tripEssentials = essentials;
       const pageType = detailRoot.dataset.type;
       const adventure = items.find(item => {
         return item.type === pageType && getActivityId(item) === activityId;
@@ -1343,8 +1369,7 @@ function renderCards(filter = "all") {
 
     cardLink.href = getAdventureDetailUrl(item);
     cardLink.setAttribute("aria-label", `Open ${item.title} ${item.type} page`);
-    image.src = item.image;
-    image.alt = item.title;
+    setAdventureCardImage(item, image);
     badge.textContent = item.type;
     badge.classList.add(item.type === "ride" ? "badge-ride" : "badge-hike");
     clone.querySelector(".date-badge").textContent = item.date;
@@ -1382,8 +1407,12 @@ if (heroQuoteText) {
 }
 
 if (cardGrid && cardTemplate) {
-  loadAdventureItems()
-    .then(items => {
+  Promise.all([
+    fetchJson("data/trip-essentials.json").then(data => getDataList(data, "essentials")).catch(() => []),
+    loadAdventureItems()
+  ])
+    .then(([essentials, items]) => {
+      tripEssentials = essentials;
       adventures = items;
       renderCards(currentFilter);
       scrollToHashTarget();

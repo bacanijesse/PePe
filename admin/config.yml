@@ -30,8 +30,6 @@ collections:
       - { label: "Distance", name: "distance", widget: "string", hint: "Example: 12.8 km" }
       - { label: "Elevation", name: "elevation", widget: "string", hint: "Example: 219 m" }
       - { label: "Moving Time", name: "time", widget: "string", hint: "Example: 1h 0m" }
-      - { label: "Card Image", name: "image", widget: "image", required: false }
-      - { label: "Chart Image", name: "chart", widget: "image", required: false }
       - { label: "GPX File Path", name: "gpx", widget: "string", required: false, hint: "Example: adventures/gpx/ride_123.gpx" }
       - { label: "YouTube URL", name: "youtube", widget: "string", required: false }
       - { label: "Description", name: "description", widget: "text" }
@@ -44,10 +42,14 @@ collections:
         name: "preparedWith"
         widget: "list"
         required: false
-        fields:
-          - { label: "Icon", name: "icon", widget: "string" }
-          - { label: "Title", name: "title", widget: "string" }
-          - { label: "Description", name: "description", widget: "text", required: false }
+        field:
+          label: "Trip Essential Number"
+          name: "number"
+          widget: "number"
+          value_type: "int"
+          min: 1
+          max: 8
+          hint: "Use 1-8 from the Trip Essentials list."
       - label: "Story Paragraphs"
         name: "story"
         widget: "list"
