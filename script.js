@@ -16,7 +16,7 @@ function homeLink(hash) {
 const pageInfo = getPageInfo();
 const shouldResetHomeOnLoad = pageInfo.isHome && !window.location.hash;
 const siteBaseUrl = new URL(".", document.baseURI);
-const dataVersion = "20260505-22";
+const dataVersion = "20260505-23";
 const githubRepoOwner = "bacanijesse";
 const githubRepoName = "PePe";
 const githubBranch = "main";
@@ -84,7 +84,7 @@ async function loadAdventureItems() {
     console.info("Using local adventure index only:", error);
   }
 
-  const items = await Promise.all(Array.from(detailPaths.entries()).map(([detailPath, summary], index) => {
+  const items = await Promise.all(Array.from(detailPaths.entries()).map(([detailPath, summary]) => {
     return fetchJson(detailPath)
       .then(detail => ({
         ...summary,
@@ -93,7 +93,8 @@ async function loadAdventureItems() {
         images: normalizeImageList(detail.images),
         image: normalizeMediaPath(detail.image || summary.image)
       }))
-      .catch(() => summary);
+      .catch(() => summary)
+      .then(hydrateAdventureMetrics);
   }));
 
   return items
@@ -276,7 +277,7 @@ function normalizeImageList(images) {
 
 // Finds the best available publish timestamp for sorting and display.
 function getPostTime(item) {
-  return item?.postedAt || item?.createdAt || item?.timestamp || item?.date || "";
+  return item?.postedAt || item?.gpxTime || item?.createdAt || item?.timestamp || item?.date || "";
 }
 
 // Converts a publish date into a numeric value for newest-first sorting.
@@ -299,6 +300,45 @@ function formatPostTimestamp(item) {
     day: "numeric",
     year: "numeric"
   }).format(new Date(parsed));
+}
+
+// Formats the activity date read from GPX timestamps.
+function formatActivityDate(date) {
+  return new Intl.DateTimeFormat("en", {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  }).format(date);
+}
+
+// Formats kilometers for card and detail stats.
+function formatDistanceLabel(kilometers) {
+  return `${kilometers.toFixed(kilometers >= 10 ? 1 : 1)} km`;
+}
+
+// Formats elevation gain for card and detail stats.
+function formatElevationLabel(meters) {
+  return `${Math.round(meters).toLocaleString()} m`;
+}
+
+// Converts minutes into compact text for adventure cards and detail stat blocks.
+function formatMovingTimeLabel(totalMinutes) {
+  return formatDurationParts(totalMinutes)
+    .map(part => `${part.value}${part.label}`)
+    .join(" ");
+}
+
+// Reads duration strings like "1h 0m" or "16m" for homepage totals.
+function getDurationMinutes(value) {
+  const text = String(value || "").toLowerCase();
+  const hourMatch = text.match(/(\d+(?:\.\d+)?)\s*h/);
+  const minuteMatch = text.match(/(\d+(?:\.\d+)?)\s*m/);
+
+  if (hourMatch || minuteMatch) {
+    return (Number(hourMatch?.[1] || 0) * 60) + Number(minuteMatch?.[1] || 0);
+  }
+
+  return getNumber(value);
 }
 
 // Pulls the activity ID number from GPX filenames like ride_123.gpx, hike_123.gpx, or run_123.gpx.
@@ -405,6 +445,51 @@ function loadGpxTrack(gpxPath) {
   }
 
   return gpxTrackCache.get(gpxPath);
+}
+
+// Calculates card/detail stats directly from the GPX file.
+function getGpxSummary(track) {
+  if (!Array.isArray(track) || !track.length) return null;
+
+  const firstTimedPoint = track.find(point => !Number.isNaN(point.time?.getTime?.()));
+  const lastTimedPoint = [...track].reverse().find(point => !Number.isNaN(point.time?.getTime?.()));
+  const distanceKm = track[track.length - 1]?.distance || 0;
+  let elevationGain = 0;
+
+  track.forEach((point, index) => {
+    if (index === 0) return;
+    const previousElevation = track[index - 1].ele;
+    const currentElevation = point.ele;
+    if (Number.isFinite(previousElevation) && Number.isFinite(currentElevation)) {
+      elevationGain += Math.max(0, currentElevation - previousElevation);
+    }
+  });
+
+  const movingMinutes = firstTimedPoint && lastTimedPoint
+    ? Math.max(0, (lastTimedPoint.time - firstTimedPoint.time) / 60000)
+    : 0;
+
+  return {
+    gpxTime: firstTimedPoint?.time?.toISOString?.() || "",
+    date: firstTimedPoint ? formatActivityDate(firstTimedPoint.time) : "",
+    distance: formatDistanceLabel(distanceKm),
+    elevation: formatElevationLabel(elevationGain),
+    time: formatMovingTimeLabel(movingMinutes)
+  };
+}
+
+// Adds automatic GPX-derived date, distance, elevation, and moving time to an adventure item.
+async function hydrateAdventureMetrics(item) {
+  if (!item.gpx) return item;
+
+  try {
+    const track = await loadGpxTrack(item.gpx);
+    const summary = getGpxSummary(track);
+    return summary ? { ...item, ...summary } : item;
+  } catch (error) {
+    console.info(`Using saved adventure stats for ${item.title || item.gpx}:`, error);
+    return item;
+  }
 }
 
 // Finds the minimum and maximum latitude, longitude, elevation, speed, heart rate, and air temperature in a track.
@@ -1575,7 +1660,7 @@ async function loadAdventureStats() {
 
       totalDistance += getNumber(adventure.distance);
       totalElevation += getNumber(adventure.elevation);
-      totalMovingMinutes += getNumber(adventure.time);
+      totalMovingMinutes += getDurationMinutes(adventure.time);
     });
 
     document.getElementById("totalRides").innerHTML = `${totalRides} <small class="stat-value-unit">Rides</small>`;
