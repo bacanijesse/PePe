@@ -3,29 +3,77 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hikes - Pedal & Peak</title>
+  <title>Hiking Routes and Trail Logs - Pedal & Peak</title>
+  <meta name="description" content="Browse Pedal & Peak hiking routes, trail stories, GPX maps, elevation, moving time, photos, and practical hiking notes." />
+  <link rel="canonical" href="https://bacanijesse.github.io/PePe/hikes.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Hiking Routes and Trail Logs - Pedal & Peak" />
+  <meta property="og:description" content="Hiking route logs with GPX maps, trail stats, photos, and planning notes." />
+  <meta property="og:url" content="https://bacanijesse.github.io/PePe/hikes.html" />
+  <meta property="og:image" content="https://bacanijesse.github.io/PePe/assets/images/adventuresbg.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="assets/pedal-peak-logo.png" type="image/png" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=20260505-22" />
+  <link rel="stylesheet" href="style.css?v=20260505-23" />
 </head>
 <body class="has-page-bg bg-priority" data-bg="assets/images/herobg.webp">
-  <!-- Shared header placeholder: script.js injects the same navigation used on every page. -->
   <div id="siteHeader"></div>
 
-  <!-- Placeholder page for future dedicated hike logs. -->
-  <main class="simple-page">
-    <div class="container" id="adventureDetail" data-type="hike">
-      <article class="simple-card">
-        <p class="eyebrow">Hikes</p>
-        <h1>Hikes</h1>
-        <p>Hike logs will live here soon. For now, use the Adventures section on the homepage to view hike cards.</p>
-        <p><a href="index.html#Adventures">View latest adventures</a></p>
-      </article>
-    </div>
+  <main class="simple-page listing-page">
+    <div class="container" id="adventureDetail" data-type="hike"></div>
+    <section class="listing-shell" aria-labelledby="hikeListingTitle">
+      <div class="section-title-row adventure-title-row">
+        <div>
+          <p class="eyebrow">Trail routes</p>
+          <h1 id="hikeListingTitle">Hike Logs</h1>
+          <p class="listing-intro">Browse hiking adventures with GPX maps, trail stats, photos, and practical planning notes.</p>
+        </div>
+        <div class="adventure-controls">
+          <div class="adventure-search" role="search" aria-label="Search hike routes">
+            <input id="adventureSearch" type="search" placeholder="Search hikes" autocomplete="off" aria-label="Search hikes" />
+          </div>
+        </div>
+      </div>
+      <p class="finder-count" id="adventureResultCount">Loading hikes...</p>
+      <div class="card-grid" id="cardGrid" data-page-type="hike"></div>
+    </section>
   </main>
 
   <div id="siteFooter"></div>
+
+  <template id="cardTemplate">
+    <article class="adventure-card">
+      <a class="card-button" href="#">
+        <div class="card-image-wrap">
+          <img class="card-image" src="" alt="" />
+          <div class="card-map" aria-hidden="true"></div>
+          <span class="badge"></span>
+          <span class="date-badge"></span>
+        </div>
+        <div class="card-body">
+          <h3></h3>
+          <p class="card-description"></p>
+          <div class="card-essential-icons" aria-label="Suggested essentials"></div>
+          <div class="meta-row">
+            <span class="distance"></span>
+            <span class="elevation"></span>
+            <span class="time"></span>
+          </div>
+        </div>
+      </a>
+    </article>
+  </template>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Hike Logs - Pedal & Peak",
+    "url": "https://bacanijesse.github.io/PePe/hikes.html",
+    "description": "Hiking route logs with GPX maps, trail stats, photos, and planning notes."
+  }
+  </script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="script.js?v=20260505-22"></script>
+  <script src="script.js?v=20260505-23"></script>
 </body>
 </html>

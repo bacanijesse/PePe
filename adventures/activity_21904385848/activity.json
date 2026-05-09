@@ -6,6 +6,15 @@
     "distance":  "4.2 km",
     "elevation":  "44 m",
     "time":  "16m",
+    "location":  "Hukou Township, Hsinchu County, Taiwan",
+    "difficulty":  "Easy",
+    "terrain":  "Town roads and compact mountain-bike climb",
+    "routeType":  "Loop",
+    "tags":  [
+                 "mountain biking",
+                 "short ride",
+                 "Hsinchu"
+             ],
     "image":  "assets/hero-bike-road.svg",
     "chart":  "assets/chart-green.svg",
     "gpx":  "adventures/gpx/ride_21904385848.gpx",

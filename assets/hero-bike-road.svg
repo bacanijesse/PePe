@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Cycling road through green hills</title>
+  <desc id="desc">A simple illustrated road curving through hills toward mountains.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#8fd0ff"/>
+      <stop offset="1" stop-color="#e9f7f0"/>
+    </linearGradient>
+    <linearGradient id="road" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#5e6b70"/>
+      <stop offset="1" stop-color="#263236"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#sky)"/>
+  <circle cx="980" cy="150" r="78" fill="#ffd86b"/>
+  <path d="M0 410 210 260 420 380 620 210 850 392 1040 248 1200 380v420H0z" fill="#7aa96b"/>
+  <path d="M0 500c160-80 260-82 420-18s300 66 460-2 236-74 320-42v362H0z" fill="#3f7f58"/>
+  <path d="M545 800c40-160 68-282 76-365 9-90-8-150-56-180h70c52 47 82 106 98 178 20 90 5 211-33 367z" fill="url(#road)"/>
+  <path d="M624 798c18-120 30-236 28-346" fill="none" stroke="#f7f2c6" stroke-width="10" stroke-linecap="round" stroke-dasharray="34 34"/>
+  <g transform="translate(384 552)" fill="none" stroke="#152926" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="0" cy="74" r="54" stroke-width="14"/>
+    <circle cx="188" cy="74" r="54" stroke-width="14"/>
+    <path d="M0 74h70l42-70 76 70h-58L70 74" stroke-width="14"/>
+    <path d="M112 4h44m-88 0h-38m82 0 20-38m24 38 22-24" stroke-width="12"/>
+    <circle cx="116" cy="-60" r="20" fill="#152926" stroke="none"/>
+    <path d="M102-38 78 18m36-52 38 42m0 0 24 50" stroke-width="16"/>
+  </g>
+</svg>

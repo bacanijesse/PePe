@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
+  <title id="title">Green route chart</title>
+  <desc id="desc">A compact elevation-style area chart.</desc>
+  <rect width="640" height="360" rx="28" fill="#f1f8ed"/>
+  <path d="M42 282h556" stroke="#b8cbb1" stroke-width="4" stroke-linecap="round"/>
+  <path d="M42 62v220" stroke="#b8cbb1" stroke-width="4" stroke-linecap="round"/>
+  <path d="M42 270 98 238l58 12 72-86 66 42 76-108 70 76 74-34 84 68v74H42z" fill="#7ebf71" opacity=".32"/>
+  <path d="M42 270 98 238l58 12 72-86 66 42 76-108 70 76 74-34 84 68" fill="none" stroke="#2f7d46" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="#2f7d46">
+    <circle cx="98" cy="238" r="10"/>
+    <circle cx="228" cy="164" r="10"/>
+    <circle cx="370" cy="98" r="10"/>
+    <circle cx="514" cy="140" r="10"/>
+  </g>
+</svg>

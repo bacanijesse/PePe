@@ -9,6 +9,15 @@
                            "distance":  "4.2 km",
                            "elevation":  "44 m",
                            "time":  "16m",
+                           "location":  "Hukou Township, Hsinchu County, Taiwan",
+                           "difficulty":  "Easy",
+                           "terrain":  "Town roads and compact mountain-bike climb",
+                           "routeType":  "Loop",
+                           "tags":  [
+                                        "mountain biking",
+                                        "short ride",
+                                        "Hsinchu"
+                                    ],
                            "image":  "assets/hero-bike-road.svg",
                            "chart":  "assets/chart-green.svg",
                            "gpx":  "adventures/gpx/ride_21904385848.gpx",
@@ -22,12 +31,21 @@
                            "date":  "Feb 18, 2026",
                            "distance":  "12.8 km",
                            "elevation":  "219 m",
-                           "time":  "1h 0m",
+                           "time":  "1h",
+                           "location":  "Hsinchu County, Taiwan",
+                           "difficulty":  "Moderate",
+                           "terrain":  "Rolling paved roads with steady climbing",
+                           "routeType":  "Out-and-back",
+                           "tags":  [
+                                        "cycling",
+                                        "training ride",
+                                        "Hsinchu"
+                                    ],
                            "image":  "assets/hero-bike-road.svg",
                            "chart":  "assets/chart-green.svg",
                            "gpx":  "adventures/gpx/ride_21906513266.gpx",
                            "detail":  "adventures/activity_21906513266/activity.json",
-                           "description":  "Auto-generated from adventures/gpx/ride_21906513266.gpx. Replace this with a short summary when the real story is ready."
+                           "description":  "A one-hour Hsinchu County cycling route with steady climbing, useful pacing practice, and GPX-backed distance and elevation data."
                        }
                    ]
 }

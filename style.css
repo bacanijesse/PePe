@@ -705,10 +705,28 @@ body.dark-mode .stat-item strong {
 .adventures-section {
   align-items: start;
   padding-top: clamp(24px, 4vh, 44px);
+  position: relative;
+}
+
+.adventures-section::before,
+.listing-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: rgba(248, 243, 239, .86);
+}
+
+body.dark-mode .adventures-section::before,
+body.dark-mode .listing-shell::before {
+  background: rgba(30, 29, 48, .92);
 }
 
 .adventures-section .container {
   width: min(calc(100% - 48px), 1520px);
+  position: relative;
+  z-index: 1;
 }
 
 .map-section,
@@ -900,6 +918,13 @@ h2 {
   transition: .2s ease;
 }
 
+body.dark-mode .adventure-card,
+body.dark-mode .listing-shell {
+  background: #25233a;
+  border-color: rgba(224, 205, 255, .28);
+  box-shadow: 0 22px 52px rgba(0, 0, 0, .34);
+}
+
 .adventure-card:hover {
   transform: translateY(-4px);
 }
@@ -940,6 +965,11 @@ h2 {
   background: var(--page);
 }
 
+.card-map .leaflet-container,
+.fallback-track-map {
+  background: #dbeee6;
+}
+
 .adventure-card.has-gpx .card-map {
   display: block;
 }
@@ -974,6 +1004,11 @@ h2 {
   padding: 14px 14px 10px;
   min-width: 0;
   position: relative;
+  background: var(--surface);
+}
+
+body.dark-mode .card-body {
+  background: #25233a;
 }
 
 .card-body h3 {
@@ -1012,6 +1047,14 @@ h2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 7px 8px;
   margin: 0 0 10px;
+}
+
+.card-guide-meta {
+  margin: 0 0 10px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.35;
 }
 
 .adventure-essential-icons {
@@ -1062,6 +1105,36 @@ h2 {
   font-size: 15px;
   margin-bottom: 6px;
   flex-wrap: wrap;
+}
+
+.listing-page {
+  align-items: flex-start;
+}
+
+.listing-page #adventureDetail[hidden] {
+  display: none;
+}
+
+.listing-shell {
+  position: relative;
+  z-index: 1;
+  width: min(calc(100% - 24px), 1520px);
+  margin: 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .82);
+  box-shadow: var(--shadow);
+  padding: clamp(22px, 4vw, 42px);
+  overflow: hidden;
+}
+
+.listing-intro {
+  max-width: 760px;
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: clamp(18px, 1.4vw, 22px);
+  font-weight: 700;
+  line-height: 1.45;
 }
 
 .elevation-chart svg {
@@ -1425,6 +1498,11 @@ body.dark-mode .site-footer {
   overflow: hidden;
 }
 
+.listing-shell > * {
+  position: relative;
+  z-index: 1;
+}
+
 .adventure-narrative-grid.has-video {
   grid-template-columns: minmax(190px, .42fr) minmax(0, 1fr);
   align-items: stretch;
@@ -1503,10 +1581,107 @@ body.dark-mode .site-footer {
 
 .adventure-mini-stats {
   display: grid;
-  grid-template-columns: repeat(3, minmax(100px, 160px));
+  grid-template-columns: repeat(auto-fit, minmax(100px, 160px));
   gap: 10px;
   align-self: start;
   align-content: start;
+}
+
+.route-guide-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.route-guide-meta div {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255,255,255,.18);
+  padding: 10px 12px;
+}
+
+.route-guide-meta dt {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.route-guide-meta dd {
+  margin: 3px 0 0;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag-list span {
+  border: 1px solid rgba(210, 237, 105, .55);
+  border-radius: 999px;
+  background: rgba(210, 237, 105, .16);
+  color: var(--text);
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.share-panel,
+.related-routes {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--page);
+  padding: clamp(16px, 2vw, 22px);
+}
+
+.share-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.share-actions,
+.related-route-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.share-actions a,
+.related-route-list a {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 900;
+}
+
+.share-actions a {
+  padding: 9px 12px;
+}
+
+.related-routes h2 {
+  margin: 0 0 12px;
+  font-size: clamp(22px, 1.6vw, 28px);
+}
+
+.related-route-list a {
+  display: grid;
+  gap: 4px;
+  min-width: min(100%, 220px);
+  padding: 12px;
+}
+
+.related-route-list span {
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .adventure-mini-stats span {

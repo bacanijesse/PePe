@@ -3,9 +3,11 @@ function getPageInfo() {
   const fileName = window.location.pathname.split("/").pop().toLowerCase();
   const isPrivacy = fileName === "privacy.html";
   const isAbout = fileName === "about.html";
+  const isRides = fileName === "rides.html";
+  const isHikes = fileName === "hikes.html";
   const isHome = !fileName || fileName === "index.html";
 
-  return { isHome, isPrivacy, isAbout };
+  return { isHome, isPrivacy, isAbout, isRides, isHikes };
 }
 
 // Builds a homepage section link that works whether the visitor is already on the homepage or another page.
@@ -109,7 +111,7 @@ function renderSiteHeader() {
   const target = placeholder || existingHeader;
   if (!target) return;
 
-  const { isHome, isPrivacy, isAbout } = getPageInfo();
+  const { isHome, isPrivacy, isAbout, isRides, isHikes } = getPageInfo();
   const header = document.createElement("header");
   header.className = "site-header";
   header.id = "top";
@@ -129,13 +131,13 @@ function renderSiteHeader() {
         <a class="${isHome ? "active" : ""}" href="${homeLink("#top")}" data-nav-section="top">Home</a>
         <a href="${homeLink("#Toolkit")}" data-nav-section="Toolkit">Planning</a>
         <div class="nav-dropdown" id="adventureDropdown">
-          <button class="nav-dropdown-button" id="adventureMenuButton" type="button" aria-expanded="false" aria-controls="adventureMenu" data-nav-section="Adventures">
+          <button class="nav-dropdown-button ${isRides || isHikes ? "active" : ""}" id="adventureMenuButton" type="button" aria-expanded="false" aria-controls="adventureMenu" data-nav-section="Adventures">
             Adventures
           </button>
           <div class="dropdown-menu" id="adventureMenu" aria-label="Adventure menu">
             <a href="${homeLink("#Adventures")}" data-adventure-filter="all">Latest</a>
-            <a href="${homeLink("#Adventures")}" data-adventure-filter="hike">Hikes</a>
-            <a href="${homeLink("#Adventures")}" data-adventure-filter="ride">Rides</a>
+            <a href="hikes.html" class="${isHikes ? "active" : ""}" data-adventure-filter="hike">Hikes</a>
+            <a href="rides.html" class="${isRides ? "active" : ""}" data-adventure-filter="ride">Rides</a>
           </div>
         </div>
         <a href="${homeLink("#Testimonials")}" data-nav-section="Testimonials">Testimonials</a>
@@ -541,7 +543,7 @@ function renderFallbackTrackMap(container, track) {
   const points = getSvgTrackPoints(track, 320, 190);
   container.innerHTML = `
     <svg class="fallback-track-map" viewBox="0 0 320 190" aria-hidden="true">
-      <rect width="320" height="190" rx="0" fill="currentColor" opacity=".08"></rect>
+      <rect width="320" height="190" rx="0" fill="#dbeee6"></rect>
       <polyline points="${points}" fill="none" stroke="#111" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" opacity=".62"></polyline>
       <polyline points="${points}" fill="none" stroke="#D2ED69" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></polyline>
     </svg>
@@ -810,6 +812,156 @@ function escapeAttribute(value = "") {
   return String(value).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
+function escapeHtml(value = "") {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function getAdventureTags(adventure) {
+  return Array.isArray(adventure.tags) ? adventure.tags.filter(Boolean) : [];
+}
+
+function renderTagList(tags) {
+  const safeTags = getAdventureTags({ tags }).slice(0, 6);
+  if (!safeTags.length) return "";
+
+  return `
+    <div class="tag-list" aria-label="Route tags">
+      ${safeTags.map(tag => `<span>${escapeHtml(tag)}</span>`).join("")}
+    </div>
+  `;
+}
+
+function renderRouteGuideMeta(adventure) {
+  const rows = [
+    ["Location", adventure.location],
+    ["Difficulty", adventure.difficulty],
+    ["Terrain", adventure.terrain],
+    ["Route type", adventure.routeType]
+  ].filter(([, value]) => value);
+
+  if (!rows.length) return "";
+
+  return `
+    <dl class="route-guide-meta">
+      ${rows.map(([label, value]) => `
+        <div>
+          <dt>${label}</dt>
+          <dd>${escapeHtml(value)}</dd>
+        </div>
+      `).join("")}
+    </dl>
+  `;
+}
+
+function getShareUrl(adventure) {
+  return siteUrl(getAdventureDetailUrl(adventure));
+}
+
+function renderShareLinks(adventure) {
+  const shareUrl = getShareUrl(adventure);
+  const title = `${adventure.title} - Pedal & Peak`;
+
+  return `
+    <div class="share-panel" aria-label="Share this route">
+      <strong>Share this route</strong>
+      <div class="share-actions">
+        <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href="https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(title)}" target="_blank" rel="noopener noreferrer">X</a>
+        <a href="mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(shareUrl)}">Email</a>
+      </div>
+    </div>
+  `;
+}
+
+function renderRelatedAdventures(adventure, items = []) {
+  const related = items
+    .filter(item => getActivityId(item) !== getActivityId(adventure))
+    .filter(item => item.type === adventure.type || item.location === adventure.location)
+    .slice(0, 3);
+
+  if (!related.length) return "";
+
+  return `
+    <section class="related-routes" aria-label="Related routes">
+      <p class="eyebrow">Keep exploring</p>
+      <h2>Related ${adventure.type === "ride" ? "rides" : "hikes"}</h2>
+      <div class="related-route-list">
+        ${related.map(item => `
+          <a href="${getAdventureDetailUrl(item)}">
+            <strong>${escapeHtml(item.title)}</strong>
+            <span>${escapeHtml(item.location || item.date || "Adventure route")}</span>
+          </a>
+        `).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function injectJsonLd(data, id = "pageSchema") {
+  const existing = document.getElementById(id);
+  if (existing) existing.remove();
+
+  const script = document.createElement("script");
+  script.type = "application/ld+json";
+  script.id = id;
+  script.textContent = JSON.stringify(data);
+  document.head.appendChild(script);
+}
+
+function injectAdventureSchema(adventure) {
+  document.title = `${adventure.title} - Pedal & Peak`;
+  const description = document.querySelector('meta[name="description"]');
+  if (description) {
+    description.content = adventure.description || `${adventure.title} route details, GPX map, photos, and stats.`;
+  }
+
+  injectJsonLd({
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: adventure.title,
+    description: adventure.description,
+    datePublished: adventure.gpxTime || adventure.date,
+    author: {
+      "@type": "Person",
+      name: "Jesse"
+    },
+    mainEntityOfPage: getShareUrl(adventure),
+    image: siteUrl(adventure.image || "assets/hero-bike-road.svg"),
+    keywords: getAdventureTags(adventure).join(", "),
+    about: [adventure.type, adventure.location, adventure.difficulty].filter(Boolean).join(", ")
+  }, "adventureSchema");
+
+  injectJsonLd({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: siteUrl("index.html")
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: adventure.type === "ride" ? "Rides" : "Hikes",
+        item: siteUrl(adventure.type === "ride" ? "rides.html" : "hikes.html")
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: adventure.title,
+        item: getShareUrl(adventure)
+      }
+    ]
+  }, "breadcrumbSchema");
+}
+
 // Builds the optional embedded YouTube video block for an adventure detail page.
 function renderAdventureVideo(videoUrl, title) {
   const embedUrl = getYoutubeEmbedUrl(videoUrl);
@@ -860,6 +1012,8 @@ function renderAdventureMiniStats(adventure) {
       <span><strong>${adventure.date}</strong><small>Date</small></span>
       <span><strong>${adventure.distance}</strong><small>Distance</small></span>
       <span><strong>${adventure.time}</strong><small>Moving Time</small></span>
+      ${adventure.difficulty ? `<span><strong>${escapeHtml(adventure.difficulty)}</strong><small>Difficulty</small></span>` : ""}
+      ${adventure.routeType ? `<span><strong>${escapeHtml(adventure.routeType)}</strong><small>Route</small></span>` : ""}
     </div>
   `;
 }
@@ -972,15 +1126,19 @@ function syncAdventureDetailHeight(container) {
 }
 
 // Builds the full ride/hike detail page: text, video, map, chart, and photo carousel.
-function renderAdventureDetail(adventure, container) {
+function renderAdventureDetail(adventure, container, allItems = []) {
   container.classList.add("activity-detail-layout");
   container.closest(".simple-page")?.classList.add("activity-page");
+  injectAdventureSchema(adventure);
+
   container.innerHTML = `
     <article class="adventure-detail-card">
       <div class="adventure-detail-copy">
         <p class="eyebrow">${adventure.type}</p>
         <h1>${adventure.title}</h1>
         ${renderAdventureMiniStats(adventure)}
+        ${renderRouteGuideMeta(adventure)}
+        ${renderTagList(adventure.tags)}
         ${renderAdventureEssentialIcons(adventure)}
         <p>${adventure.description}</p>
         ${renderActivityImageCarousel(adventure.images, adventure.title)}
@@ -992,6 +1150,8 @@ function renderAdventureDetail(adventure, container) {
           ${renderAdventureStory(adventure)}
         </div>
         ${renderAdventureVideo(adventure.youtube, adventure.title)}
+        ${renderShareLinks(adventure)}
+        ${renderRelatedAdventures(adventure, allItems)}
       </div>
     </article>
   `;
@@ -1022,7 +1182,12 @@ function initAdventureDetailPage() {
   if (!detailRoot) return;
 
   const activityId = new URLSearchParams(window.location.search).get("activity");
-  if (!activityId) return;
+  if (!activityId) {
+    detailRoot.hidden = true;
+    return;
+  }
+
+  document.querySelector(".listing-shell")?.setAttribute("hidden", "");
 
   Promise.all([
     fetchJson("data/trip-essentials.json").then(data => getDataList(data, "essentials")).catch(() => []),
@@ -1049,7 +1214,7 @@ function initAdventureDetailPage() {
 
       return fetchJson(getAdventureDetailDataPath(adventure))
         .then(detailData => {
-          renderAdventureDetail({ ...adventure, ...detailData }, detailRoot);
+          renderAdventureDetail({ ...adventure, ...detailData }, detailRoot, items);
         });
     })
     .catch(() => {
@@ -1335,6 +1500,11 @@ function getAdventureSearchText(item) {
     item.title,
     item.type,
     item.date,
+    item.location,
+    item.difficulty,
+    item.terrain,
+    item.routeType,
+    ...getAdventureTags(item),
     item.distance,
     item.elevation,
     item.time,
@@ -1353,11 +1523,16 @@ function getFilteredAdventures(filter = "all") {
   });
 }
 
+function getCurrentCardFilter(filter = currentFilter) {
+  return cardGrid?.dataset.pageType || filter || "all";
+}
+
 // Updates the small adventure count line under the section title.
 function updateAdventureResultCount(count) {
   if (!adventureResultCount) return;
 
-  const typeLabel = currentFilter === "all" ? "adventure" : currentFilter;
+  const effectiveFilter = getCurrentCardFilter();
+  const typeLabel = effectiveFilter === "all" ? "adventure" : effectiveFilter;
   const plural = count === 1 ? typeLabel : `${typeLabel}s`;
   adventureResultCount.textContent = currentSearch
     ? `${count} matching ${plural}`
@@ -1367,7 +1542,13 @@ function updateAdventureResultCount(count) {
 // Stores the current search text and redraws the adventure cards.
 function updateAdventureSearch(value) {
   currentSearch = value;
-  renderCards(currentFilter);
+  renderCards(getCurrentCardFilter());
+}
+
+function renderCardGuideMeta(item) {
+  const meta = [item.location, item.difficulty, item.routeType].filter(Boolean);
+  if (!meta.length) return "";
+  return `<p class="card-guide-meta">${meta.map(escapeHtml).join(" / ")}</p>`;
 }
 
 // Renders the planning essentials infographic cards.
@@ -1386,7 +1567,7 @@ function renderTripEssentials(items) {
   `).join("");
 
   if (cardGrid && cardTemplate && adventures.length) {
-    renderCards(currentFilter);
+    renderCards(getCurrentCardFilter());
   }
 }
 
@@ -1497,7 +1678,8 @@ function renderCards(filter = "all") {
   if (!cardGrid || !cardTemplate) return;
 
   cardGrid.innerHTML = "";
-  const filtered = getFilteredAdventures(filter);
+  const effectiveFilter = getCurrentCardFilter(filter);
+  const filtered = getFilteredAdventures(effectiveFilter);
   updateAdventureResultCount(filtered.length);
 
   if (!filtered.length) {
@@ -1525,6 +1707,7 @@ function renderCards(filter = "all") {
     clone.querySelector(".distance").textContent = item.distance;
     clone.querySelector("h3").textContent = item.title;
     clone.querySelector(".card-description").textContent = item.description;
+    clone.querySelector(".card-description").insertAdjacentHTML("afterend", renderCardGuideMeta(item));
     clone.querySelector(".card-essential-icons").outerHTML = renderAdventureEssentialIcons(item, true);
     clone.querySelector(".elevation").textContent = item.elevation;
     clone.querySelector(".time").textContent = item.time;
@@ -1562,7 +1745,7 @@ if (cardGrid && cardTemplate) {
     .then(([essentials, items]) => {
       tripEssentials = essentials;
       adventures = items;
-      renderCards(currentFilter);
+      renderCards(getCurrentCardFilter());
       scrollToHashTarget();
     })
     .catch(() => {
@@ -1674,4 +1857,34 @@ async function loadAdventureStats() {
   }
 }
 
+function initContactForm() {
+  const contactForm = document.getElementById("contactForm");
+  const formNote = document.getElementById("formNote");
+  if (!contactForm) return;
+
+  contactForm.addEventListener("submit", event => {
+    event.preventDefault();
+
+    const formData = new FormData(contactForm);
+    const name = formData.get("name") || "";
+    const email = formData.get("email") || "";
+    const message = formData.get("message") || "";
+    const to = formData.get("to") || "bacanijesse@gmail.com";
+    const subject = `Pedal & Peak message from ${name}`;
+    const body = [
+      `Name: ${name}`,
+      `Email: ${email}`,
+      "",
+      message
+    ].join("\n");
+
+    window.location.href = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    if (formNote) {
+      formNote.textContent = "Your email app should open with the message ready to send.";
+    }
+  });
+}
+
+initContactForm();
 loadAdventureStats();

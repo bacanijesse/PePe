@@ -217,6 +217,11 @@ Get-ChildItem -LiteralPath $GpxRoot -File -Filter "*.gpx" | Sort-Object Name | F
     distance = $summary.Distance
     elevation = $summary.Elevation
     time = $summary.Time
+    location = if ($existingDetail.location) { $existingDetail.location } elseif ($existingIndexItem.location) { $existingIndexItem.location } else { "" }
+    difficulty = if ($existingDetail.difficulty) { $existingDetail.difficulty } elseif ($existingIndexItem.difficulty) { $existingIndexItem.difficulty } else { "" }
+    terrain = if ($existingDetail.terrain) { $existingDetail.terrain } elseif ($existingIndexItem.terrain) { $existingIndexItem.terrain } else { "" }
+    routeType = if ($existingDetail.routeType) { $existingDetail.routeType } elseif ($existingIndexItem.routeType) { $existingIndexItem.routeType } else { "" }
+    tags = if ($existingDetail.tags) { @($existingDetail.tags) } elseif ($existingIndexItem.tags) { @($existingIndexItem.tags) } else { @() }
     image = if ($existingDetail.image) { $existingDetail.image } elseif ($existingIndexItem.image) { $existingIndexItem.image } else { "assets/hero-bike-road.svg" }
     chart = if ($existingDetail.chart) { $existingDetail.chart } elseif ($existingIndexItem.chart) { $existingIndexItem.chart } else { "assets/chart-green.svg" }
     gpx = $summary.Gpx
@@ -249,6 +254,11 @@ Get-ChildItem -LiteralPath $GpxRoot -File -Filter "*.gpx" | Sort-Object Name | F
     distance = $activity.distance
     elevation = $activity.elevation
     time = $activity.time
+    location = $activity.location
+    difficulty = $activity.difficulty
+    terrain = $activity.terrain
+    routeType = $activity.routeType
+    tags = $activity.tags
     image = $activity.image
     chart = $activity.chart
     gpx = $activity.gpx

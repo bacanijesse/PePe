@@ -59,6 +59,16 @@ Then open:
 http://127.0.0.1:8000/index.html
 ```
 
+## Running Tests
+
+Run the static site checks with PowerShell:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File tests/site-test.ps1
+```
+
+The test checks content JSON, adventure detail/GPX consistency, GPX-derived metrics, local asset references, and merge conflict markers.
+
 ## Notes
 
 This is a static website, so the contact form currently runs client-side only. To receive real messages, connect the form to a backend or form service later.

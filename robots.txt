@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bacanijesse.github.io/PePe/sitemap.xml
