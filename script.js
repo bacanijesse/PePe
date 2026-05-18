@@ -165,7 +165,38 @@ function renderSiteHeader() {
             </svg>
           </span>
         </button>
-        <img class="avatar" src="assets/avatar.svg" alt="Jesse profile avatar" />
+        <div class="profile-menu" id="profileMenu">
+          <button class="avatar-button" id="avatarButton" type="button" aria-label="Open Jesse profile card" aria-expanded="false" aria-controls="profileCard">
+            <img class="avatar" src="assets/avatar.svg" alt="" aria-hidden="true" />
+          </button>
+          <aside class="profile-card" id="profileCard" aria-label="Jesse profile card">
+            <div class="profile-card-banner" aria-hidden="true"></div>
+            <div class="profile-card-body">
+              <img class="profile-card-avatar" src="assets/avatar.svg" alt="Jesse profile avatar" />
+              <h2>Hi, I’m Jesse</h2>
+              <p class="profile-card-subtitle">Creator of Pedal & Peak</p>
+              <p>I’m a cycling and hiking enthusiast who loves exploring new roads, quiet trails, and beautiful places. This site is my personal journal for stories, routes, and lessons from each adventure.</p>
+              <ul class="profile-card-details">
+                <li><span aria-hidden="true">⌖</span> Based in the Philippines</li>
+                <li><span aria-hidden="true">♢</span> Cyclist • Hiker • Explorer</li>
+                <li><span aria-hidden="true">□</span> Adventuring since 2023</li>
+                <li><span aria-hidden="true">◉</span> pedalandpeak.com</li>
+              </ul>
+              <a class="profile-card-primary" href="${homeLink("#Adventures")}">View My Adventures</a>
+              <div class="profile-card-socials" aria-label="Jesse social links">
+                <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer">
+                  <span aria-hidden="true">♪</span>
+                  TikTok
+                </a>
+                <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">
+                  <span aria-hidden="true">▶</span>
+                  YouTube
+                </a>
+              </div>
+              <a class="profile-card-secondary" href="${homeLink("#contact")}">Contact Jesse</a>
+            </div>
+          </aside>
+        </div>
       </div>
     </div>
   `;
@@ -210,6 +241,8 @@ const adventureSearch = document.getElementById("adventureSearch");
 const adventureResultCount = document.getElementById("adventureResultCount");
 const adventureDropdown = document.getElementById("adventureDropdown");
 const adventureMenuButton = document.getElementById("adventureMenuButton");
+const profileMenu = document.getElementById("profileMenu");
+const avatarButton = document.getElementById("avatarButton");
 const navTrackedItems = document.querySelectorAll("[data-nav-section]");
 const testimonialCarousel = document.getElementById("testimonialCarousel");
 const testimonialTemplate = document.getElementById("testimonialTemplate");
@@ -1012,8 +1045,6 @@ function renderAdventureMiniStats(adventure) {
       <span><strong>${adventure.date}</strong><small>Date</small></span>
       <span><strong>${adventure.distance}</strong><small>Distance</small></span>
       <span><strong>${adventure.time}</strong><small>Moving Time</small></span>
-      ${adventure.difficulty ? `<span><strong>${escapeHtml(adventure.difficulty)}</strong><small>Difficulty</small></span>` : ""}
-      ${adventure.routeType ? `<span><strong>${escapeHtml(adventure.routeType)}</strong><small>Route</small></span>` : ""}
     </div>
   `;
 }
@@ -1093,7 +1124,7 @@ function syncAdventureDetailHeight(container) {
       videoFrame?.getBoundingClientRect().height || 0,
       videoFallbackHeight
     )) : 0;
-    const storyHeight = Math.max(260, columnHeight - videoHeight - rowGap);
+    const storyHeight = Math.min(340, Math.max(240, columnHeight - videoHeight - rowGap));
 
     card.style.setProperty("--detail-column-height", `${columnHeight}px`);
     card.style.setProperty("--story-panel-height", `${storyHeight}px`);
@@ -1300,11 +1331,13 @@ themeToggle?.addEventListener("click", () => {
 menuButton?.addEventListener("click", () => {
   const isOpen = nav.classList.toggle("open");
   menuButton.setAttribute("aria-expanded", isOpen ? "true" : "false");
+  if (isOpen) closeProfileMenu();
 });
 
 adventureMenuButton?.addEventListener("click", event => {
   event.stopPropagation();
   adventureDropdown?.classList.remove("is-click-closed");
+  closeProfileMenu();
 
   if (!getPageInfo().isHome) {
     window.location.href = "index.html#Adventures";
@@ -1315,12 +1348,33 @@ adventureMenuButton?.addEventListener("click", event => {
   adventureMenuButton.setAttribute("aria-expanded", isOpen ? "true" : "false");
 });
 
+avatarButton?.addEventListener("click", event => {
+  event.stopPropagation();
+  adventureDropdown?.classList.remove("open");
+  adventureMenuButton?.setAttribute("aria-expanded", "false");
+
+  const isOpen = profileMenu?.classList.toggle("open");
+  avatarButton.setAttribute("aria-expanded", isOpen ? "true" : "false");
+});
+
 document.addEventListener("click", event => {
   if (!adventureDropdown?.contains(event.target)) {
     adventureDropdown?.classList.remove("open");
     adventureDropdown?.classList.remove("is-click-closed");
     adventureMenuButton?.setAttribute("aria-expanded", "false");
   }
+
+  if (!profileMenu?.contains(event.target)) {
+    closeProfileMenu();
+  }
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key !== "Escape") return;
+  adventureDropdown?.classList.remove("open");
+  adventureDropdown?.classList.remove("is-click-closed");
+  adventureMenuButton?.setAttribute("aria-expanded", "false");
+  closeProfileMenu();
 });
 
 // Removes active styling from all main navigation links.
@@ -1355,9 +1409,15 @@ function showSiteHeader() {
   siteHeader?.classList.remove("is-hidden");
 }
 
+function closeProfileMenu() {
+  profileMenu?.classList.remove("open");
+  avatarButton?.setAttribute("aria-expanded", "false");
+}
+
 // Hides the fixed header when the visitor is away from the hero and the mobile menu is closed.
 function hideSiteHeader() {
   if (!siteHeader || isHeroVisible() || nav?.classList.contains("open")) return;
+  closeProfileMenu();
   siteHeader.classList.add("is-hidden");
 }
 

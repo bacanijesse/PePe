@@ -1,36 +1,144 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 240" preserveAspectRatio="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 260" preserveAspectRatio="none">
   <defs>
-    <linearGradient id="leafFade" x1="0" x2="0" y1="0" y2="1">
-      <stop offset="0" stop-color="#D2ED69" stop-opacity="0"/>
-      <stop offset=".42" stop-color="#7CA942" stop-opacity=".34"/>
-      <stop offset="1" stop-color="#21451F" stop-opacity=".52"/>
+    <linearGradient id="mist" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#F8F3EF" stop-opacity="0"/>
+      <stop offset=".30" stop-color="#E4E8DF" stop-opacity=".70"/>
+      <stop offset=".62" stop-color="#6D8075" stop-opacity=".78"/>
+      <stop offset="1" stop-color="#183529" stop-opacity="1"/>
     </linearGradient>
+    <linearGradient id="frontTree" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#263F35"/>
+      <stop offset="1" stop-color="#142D24"/>
+    </linearGradient>
+    <symbol id="pineTall" viewBox="-16 0 32 178">
+      <path d="M0 0c-3 14-9 27-16 40h9c-5 9-11 18-18 28h11c-6 10-13 20-21 31h13c-7 12-16 24-26 37h96c-10-13-19-25-26-37h13c-8-11-15-21-21-31h11c-7-10-13-19-18-28h9C9 27 3 14 0 0z"/>
+      <rect x="-2.4" y="134" width="4.8" height="44" rx="1"/>
+    </symbol>
+    <symbol id="pineNeedle" viewBox="-13 0 26 170">
+      <path d="M0 0c-3 15-8 28-14 42h8c-5 10-10 20-16 30h9c-5 11-12 22-19 34h11c-6 12-14 24-23 37h88c-9-13-17-25-23-37h11c-7-12-14-23-19-34h9c-6-10-11-20-16-30h8C8 28 3 15 0 0z"/>
+      <rect x="-2" y="132" width="4" height="38" rx="1"/>
+    </symbol>
   </defs>
-  <rect width="1600" height="240" fill="url(#leafFade)"/>
-  <g fill="#21451F" opacity=".62">
-    <path d="M0 240h1600v-44c-58-14-114-19-166-14-45-35-93-51-145-42-35 6-66 25-96 47-57-45-121-65-188-49-43 10-80 34-118 61-72-35-143-39-214-12-46-30-97-42-152-29-42 10-76 35-111 61-69-44-139-55-210-22-58-34-123-42-200-17z"/>
+
+  <rect width="1600" height="260" fill="url(#mist)"/>
+
+  <g fill="#B8C3B9" opacity=".70">
+    <path d="M0 151l88-48 63 34 136-31 91 43 82-31 92 33 125-45 83 44 91-35 88 36 116-43 82 44 110-35 94 36 116-48 142 45v110H0z"/>
   </g>
-  <g fill="#356A2D" opacity=".86">
-    <path d="M84 240V102l-55 82h38l-35 56zm114 0V78l-66 101h44l-39 61zm128 0V112l-51 77h35l-31 51zm154 0V74l-68 104h45l-43 62zm126 0V120l-48 72h33l-29 48zm151 0V84l-64 98h42l-38 58zm117 0V126l-46 68h31l-27 46zm169 0V72l-70 106h46l-42 62zm136 0V116l-52 78h35l-32 46zm154 0V82l-64 99h43l-39 59zm134 0V128l-45 66h30l-26 46zm112 0V98l-57 86h38l-34 56z"/>
+  <g fill="#8D9C91" opacity=".62">
+    <path d="M0 164c68-43 132-48 195-13 76-51 152-52 226-5 80-42 153-37 219 14 76-56 153-62 232-20 66 34 116 35 177 2 93-50 180-42 263 23 74-44 149-45 224-2 28 16 49 25 64 28v69H0z"/>
   </g>
-  <g fill="#D2ED69" opacity=".86">
-    <ellipse cx="70" cy="164" rx="24" ry="12" transform="rotate(-22 70 164)"/>
-    <ellipse cx="144" cy="124" rx="28" ry="13" transform="rotate(28 144 124)"/>
-    <ellipse cx="238" cy="176" rx="23" ry="12" transform="rotate(-34 238 176)"/>
-    <ellipse cx="384" cy="134" rx="31" ry="14" transform="rotate(25 384 134)"/>
-    <ellipse cx="512" cy="178" rx="26" ry="13" transform="rotate(-28 512 178)"/>
-    <ellipse cx="648" cy="138" rx="28" ry="13" transform="rotate(31 648 138)"/>
-    <ellipse cx="782" cy="184" rx="25" ry="12" transform="rotate(-24 782 184)"/>
-    <ellipse cx="930" cy="130" rx="32" ry="15" transform="rotate(23 930 130)"/>
-    <ellipse cx="1068" cy="178" rx="25" ry="12" transform="rotate(-30 1068 178)"/>
-    <ellipse cx="1210" cy="138" rx="30" ry="14" transform="rotate(28 1210 138)"/>
-    <ellipse cx="1350" cy="182" rx="26" ry="13" transform="rotate(-28 1350 182)"/>
-    <ellipse cx="1490" cy="132" rx="31" ry="14" transform="rotate(24 1490 132)"/>
+  <g fill="#617468" opacity=".48">
+    <path d="M0 181c84-30 167-30 250 1 72-34 143-35 213-3 73-29 142-29 206 1 78-36 156-39 235-8 78-36 155-36 232 1 73-35 148-36 225-2 79-33 158-31 239 8v81H0z"/>
   </g>
-  <g fill="#FFE251" opacity=".62">
-    <circle cx="184" cy="168" r="6"/>
-    <circle cx="584" cy="146" r="7"/>
-    <circle cx="1018" cy="162" r="6"/>
-    <circle cx="1412" cy="152" r="7"/>
+
+  <g fill="#526B5E" opacity=".42">
+    <use href="#pineNeedle" x="6" y="76" width="30" height="152"/>
+    <use href="#pineTall" x="54" y="103" width="34" height="142"/>
+    <use href="#pineNeedle" x="91" y="86" width="31" height="154"/>
+    <use href="#pineTall" x="136" y="107" width="32" height="138"/>
+    <use href="#pineNeedle" x="184" y="82" width="34" height="158"/>
+    <use href="#pineTall" x="231" y="116" width="30" height="128"/>
+    <use href="#pineNeedle" x="276" y="96" width="30" height="146"/>
+    <use href="#pineTall" x="318" y="111" width="31" height="134"/>
+    <use href="#pineNeedle" x="364" y="92" width="32" height="150"/>
+    <use href="#pineTall" x="412" y="118" width="29" height="126"/>
+    <use href="#pineNeedle" x="458" y="93" width="31" height="150"/>
+    <use href="#pineTall" x="505" y="105" width="35" height="140"/>
+    <use href="#pineNeedle" x="555" y="85" width="35" height="158"/>
+    <use href="#pineTall" x="604" y="114" width="30" height="130"/>
+    <use href="#pineNeedle" x="648" y="96" width="30" height="146"/>
+    <use href="#pineTall" x="692" y="101" width="36" height="144"/>
+    <use href="#pineNeedle" x="744" y="84" width="34" height="158"/>
+    <use href="#pineTall" x="791" y="115" width="30" height="130"/>
+    <use href="#pineNeedle" x="836" y="94" width="31" height="148"/>
+    <use href="#pineTall" x="880" y="108" width="33" height="136"/>
+    <use href="#pineNeedle" x="928" y="88" width="34" height="154"/>
+    <use href="#pineTall" x="976" y="116" width="30" height="128"/>
+    <use href="#pineNeedle" x="1021" y="96" width="31" height="146"/>
+    <use href="#pineTall" x="1068" y="103" width="35" height="142"/>
+    <use href="#pineNeedle" x="1118" y="84" width="35" height="158"/>
+    <use href="#pineTall" x="1168" y="116" width="30" height="128"/>
+    <use href="#pineNeedle" x="1212" y="94" width="31" height="148"/>
+    <use href="#pineTall" x="1258" y="106" width="34" height="138"/>
+    <use href="#pineNeedle" x="1307" y="87" width="34" height="154"/>
+    <use href="#pineTall" x="1355" y="117" width="30" height="128"/>
+    <use href="#pineNeedle" x="1398" y="94" width="32" height="148"/>
+    <use href="#pineTall" x="1446" y="104" width="35" height="140"/>
+    <use href="#pineNeedle" x="1498" y="82" width="35" height="158"/>
+    <use href="#pineTall" x="1549" y="108" width="34" height="136"/>
+  </g>
+
+  <g fill="#3B564A" opacity=".66">
+    <use href="#pineTall" x="18" y="96" width="42" height="160"/>
+    <use href="#pineNeedle" x="72" y="116" width="32" height="134"/>
+    <use href="#pineTall" x="112" y="104" width="38" height="148"/>
+    <use href="#pineNeedle" x="164" y="119" width="30" height="132"/>
+    <use href="#pineTall" x="207" y="94" width="43" height="162"/>
+    <use href="#pineNeedle" x="264" y="120" width="30" height="130"/>
+    <use href="#pineTall" x="304" y="110" width="35" height="140"/>
+    <use href="#pineNeedle" x="352" y="116" width="31" height="136"/>
+    <use href="#pineTall" x="396" y="100" width="40" height="154"/>
+    <use href="#pineNeedle" x="451" y="119" width="30" height="132"/>
+    <use href="#pineTall" x="492" y="108" width="37" height="144"/>
+    <use href="#pineNeedle" x="543" y="118" width="31" height="134"/>
+    <use href="#pineTall" x="586" y="92" width="44" height="164"/>
+    <use href="#pineNeedle" x="645" y="122" width="29" height="128"/>
+    <use href="#pineTall" x="684" y="106" width="38" height="146"/>
+    <use href="#pineNeedle" x="737" y="116" width="32" height="136"/>
+    <use href="#pineTall" x="782" y="98" width="41" height="156"/>
+    <use href="#pineNeedle" x="839" y="121" width="30" height="130"/>
+    <use href="#pineTall" x="879" y="108" width="37" height="144"/>
+    <use href="#pineNeedle" x="930" y="116" width="31" height="136"/>
+    <use href="#pineTall" x="974" y="94" width="43" height="162"/>
+    <use href="#pineNeedle" x="1033" y="122" width="29" height="128"/>
+    <use href="#pineTall" x="1071" y="105" width="39" height="148"/>
+    <use href="#pineNeedle" x="1125" y="117" width="31" height="134"/>
+    <use href="#pineTall" x="1167" y="101" width="40" height="152"/>
+    <use href="#pineNeedle" x="1224" y="120" width="30" height="130"/>
+    <use href="#pineTall" x="1266" y="96" width="42" height="160"/>
+    <use href="#pineNeedle" x="1322" y="119" width="30" height="132"/>
+    <use href="#pineTall" x="1363" y="109" width="37" height="142"/>
+    <use href="#pineNeedle" x="1414" y="116" width="31" height="136"/>
+    <use href="#pineTall" x="1458" y="92" width="44" height="164"/>
+    <use href="#pineNeedle" x="1518" y="118" width="31" height="134"/>
+    <use href="#pineTall" x="1558" y="102" width="42" height="152"/>
+  </g>
+
+  <g fill="url(#frontTree)" opacity=".98">
+    <path d="M0 260v-48c64-19 129-22 195-10 66 12 126 36 192 31 68-5 128-36 195-30 70 6 128 46 198 48 61 2 120-28 181-30 71-2 131 34 201 42 58 7 111-14 166-24 93-17 183 4 272 45v-24z"/>
+    <use href="#pineTall" x="-8" y="82" width="50" height="178"/>
+    <use href="#pineNeedle" x="36" y="104" width="37" height="156"/>
+    <use href="#pineTall" x="78" y="92" width="45" height="168"/>
+    <use href="#pineNeedle" x="130" y="112" width="35" height="148"/>
+    <use href="#pineTall" x="174" y="86" width="49" height="174"/>
+    <use href="#pineNeedle" x="232" y="116" width="34" height="144"/>
+    <use href="#pineTall" x="276" y="101" width="42" height="159"/>
+    <use href="#pineNeedle" x="327" y="114" width="35" height="146"/>
+    <use href="#pineTall" x="371" y="92" width="45" height="168"/>
+    <use href="#pineNeedle" x="425" y="118" width="33" height="142"/>
+    <use href="#pineTall" x="466" y="102" width="42" height="158"/>
+    <use href="#pineNeedle" x="516" y="115" width="35" height="145"/>
+    <use href="#pineTall" x="560" y="86" width="50" height="174"/>
+    <use href="#pineNeedle" x="620" y="119" width="33" height="141"/>
+    <use href="#pineTall" x="662" y="98" width="44" height="162"/>
+    <use href="#pineNeedle" x="716" y="114" width="35" height="146"/>
+    <use href="#pineTall" x="760" y="90" width="47" height="170"/>
+    <use href="#pineNeedle" x="816" y="118" width="33" height="142"/>
+    <use href="#pineTall" x="858" y="100" width="43" height="160"/>
+    <use href="#pineNeedle" x="910" y="116" width="34" height="144"/>
+    <use href="#pineTall" x="954" y="84" width="50" height="176"/>
+    <use href="#pineNeedle" x="1014" y="119" width="33" height="141"/>
+    <use href="#pineTall" x="1056" y="99" width="44" height="161"/>
+    <use href="#pineNeedle" x="1110" y="115" width="35" height="145"/>
+    <use href="#pineTall" x="1154" y="91" width="46" height="169"/>
+    <use href="#pineNeedle" x="1211" y="118" width="33" height="142"/>
+    <use href="#pineTall" x="1253" y="86" width="49" height="174"/>
+    <use href="#pineNeedle" x="1312" y="116" width="34" height="144"/>
+    <use href="#pineTall" x="1354" y="101" width="43" height="159"/>
+    <use href="#pineNeedle" x="1407" y="114" width="35" height="146"/>
+    <use href="#pineTall" x="1452" y="88" width="48" height="172"/>
+    <use href="#pineNeedle" x="1510" y="116" width="35" height="144"/>
+    <use href="#pineTall" x="1552" y="82" width="50" height="178"/>
   </g>
 </svg>

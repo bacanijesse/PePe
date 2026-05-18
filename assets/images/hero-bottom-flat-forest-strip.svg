@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2400 260" preserveAspectRatio="none" role="img" aria-label="Flat forest and mountain bottom strip">
+  <defs>
+    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="55%" stop-color="#dfe8de" stop-opacity=".55"/>
+      <stop offset="100%" stop-color="#173229" stop-opacity=".95"/>
+    </linearGradient>
+
+    <symbol id="pine" viewBox="0 0 80 180">
+      <path d="M40 0 L7 55 H25 L0 102 H24 L6 142 H34 V180 H46 V142 H74 L56 102 H80 L55 55 H73 Z"/>
+    </symbol>
+
+    <symbol id="pineSoft" viewBox="0 0 80 180">
+      <path d="M40 0 L10 58 H27 L5 105 H27 L12 140 H34 V180 H46 V140 H68 L53 105 H75 L53 58 H70 Z"/>
+    </symbol>
+  </defs>
+
+  <!-- soft mist fade behind the forest -->
+  <rect x="0" y="0" width="2400" height="260" fill="url(#fade)"/>
+
+  <!-- back mountains -->
+  <path d="M0 138 L110 92 L210 123 L335 76 L465 118 L640 86 L810 126 L970 82 L1135 120 L1320 78 L1510 124 L1680 83 L1845 122 L2020 74 L2180 116 L2400 82 L2400 260 L0 260 Z"
+        fill="#9dad9f" opacity=".55"/>
+  <path d="M0 158 L150 116 L315 150 L460 108 L650 150 L800 112 L980 154 L1170 113 L1355 150 L1535 112 L1700 154 L1905 112 L2080 150 L2255 114 L2400 145 L2400 260 L0 260 Z"
+        fill="#6f8376" opacity=".55"/>
+
+  <!-- far tree layer -->
+  <g fill="#53695e" opacity=".58">
+    <use href="#pineSoft" x="10" y="79" width="52" height="118"/>
+    <use href="#pineSoft" x="70" y="95" width="44" height="102"/>
+    <use href="#pineSoft" x="135" y="85" width="50" height="112"/>
+    <use href="#pineSoft" x="205" y="101" width="42" height="96"/>
+    <use href="#pineSoft" x="285" y="88" width="48" height="109"/>
+    <use href="#pineSoft" x="365" y="96" width="43" height="101"/>
+    <use href="#pineSoft" x="440" y="79" width="54" height="118"/>
+    <use href="#pineSoft" x="515" y="100" width="42" height="97"/>
+    <use href="#pineSoft" x="590" y="86" width="50" height="111"/>
+    <use href="#pineSoft" x="680" y="94" width="44" height="103"/>
+    <use href="#pineSoft" x="760" y="78" width="56" height="119"/>
+    <use href="#pineSoft" x="845" y="98" width="43" height="99"/>
+    <use href="#pineSoft" x="920" y="88" width="49" height="109"/>
+    <use href="#pineSoft" x="1005" y="101" width="42" height="96"/>
+    <use href="#pineSoft" x="1075" y="83" width="52" height="114"/>
+    <use href="#pineSoft" x="1160" y="94" width="45" height="103"/>
+    <use href="#pineSoft" x="1240" y="79" width="54" height="118"/>
+    <use href="#pineSoft" x="1325" y="99" width="42" height="98"/>
+    <use href="#pineSoft" x="1390" y="86" width="50" height="111"/>
+    <use href="#pineSoft" x="1480" y="94" width="45" height="103"/>
+    <use href="#pineSoft" x="1565" y="82" width="53" height="115"/>
+    <use href="#pineSoft" x="1650" y="98" width="42" height="99"/>
+    <use href="#pineSoft" x="1720" y="87" width="49" height="110"/>
+    <use href="#pineSoft" x="1810" y="99" width="42" height="98"/>
+    <use href="#pineSoft" x="1885" y="81" width="53" height="116"/>
+    <use href="#pineSoft" x="1970" y="95" width="44" height="102"/>
+    <use href="#pineSoft" x="2045" y="86" width="50" height="111"/>
+    <use href="#pineSoft" x="2135" y="98" width="42" height="99"/>
+    <use href="#pineSoft" x="2210" y="80" width="55" height="117"/>
+    <use href="#pineSoft" x="2295" y="92" width="47" height="105"/>
+  </g>
+
+  <!-- front tree layer -->
+  <g fill="#18382f" opacity=".94">
+    <use href="#pine" x="-15" y="25" width="88" height="198"/>
+    <use href="#pine" x="55" y="45" width="68" height="160"/>
+    <use href="#pine" x="120" y="32" width="82" height="185"/>
+    <use href="#pine" x="205" y="58" width="62" height="145"/>
+    <use href="#pine" x="280" y="41" width="74" height="170"/>
+    <use href="#pine" x="365" y="55" width="64" height="150"/>
+    <use href="#pine" x="440" y="34" width="82" height="185"/>
+    <use href="#pine" x="535" y="62" width="58" height="138"/>
+    <use href="#pine" x="600" y="48" width="68" height="156"/>
+    <use href="#pine" x="680" y="38" width="78" height="175"/>
+    <use href="#pine" x="775" y="60" width="60" height="143"/>
+    <use href="#pine" x="840" y="30" width="84" height="190"/>
+    <use href="#pine" x="935" y="53" width="66" height="153"/>
+    <use href="#pine" x="1015" y="43" width="72" height="166"/>
+    <use href="#pine" x="1100" y="59" width="60" height="145"/>
+    <use href="#pine" x="1170" y="36" width="80" height="180"/>
+    <use href="#pine" x="1265" y="52" width="66" height="153"/>
+    <use href="#pine" x="1340" y="28" width="86" height="193"/>
+    <use href="#pine" x="1440" y="56" width="62" height="147"/>
+    <use href="#pine" x="1515" y="41" width="76" height="170"/>
+    <use href="#pine" x="1605" y="61" width="58" height="140"/>
+    <use href="#pine" x="1675" y="34" width="82" height="184"/>
+    <use href="#pine" x="1775" y="54" width="64" height="150"/>
+    <use href="#pine" x="1850" y="42" width="74" height="168"/>
+    <use href="#pine" x="1935" y="59" width="60" height="143"/>
+    <use href="#pine" x="2005" y="33" width="82" height="186"/>
+    <use href="#pine" x="2100" y="55" width="64" height="149"/>
+    <use href="#pine" x="2175" y="39" width="76" height="172"/>
+    <use href="#pine" x="2265" y="58" width="62" height="145"/>
+    <use href="#pine" x="2330" y="24" width="90" height="200"/>
+  </g>
+
+  <!-- dark base -->
+  <path d="M0 190 C280 206 455 194 650 206 C880 222 980 196 1200 208 C1450 224 1600 198 1840 210 C2070 222 2210 201 2400 212 L2400 260 L0 260 Z"
+        fill="#173229" opacity=".98"/>
+</svg>
