@@ -3,7 +3,6 @@
 
 :root {
   --header-height: 82px;
-  --section-bg: none;
   --page-bg-image: none;
   --flame: #E2572B;
   --dark: #1E1D30;
@@ -570,6 +569,7 @@ body.dark-mode .profile-card-socials a {
 
 /* Homepage hero: first screen with intro copy, rotating quote, theme-aware background, and stats. */
 .hero {
+  --hero-landscape-height: clamp(95px, 12vw, 175px);
   height: 100svh;
   background: transparent;
   position: relative;
@@ -591,7 +591,12 @@ body.dark-mode .profile-card-socials a {
 }
 
 .hero::after {
-  display: none;
+  inset: 0;
+  background:
+    url("assets/images/hero-vine-border.svg") left top / var(--hero-vine-width) 100% no-repeat,
+    url("assets/images/hero-vine-border.svg") right top / var(--hero-vine-width) 100% no-repeat;
+  filter: brightness(1.5) saturate(.72);
+  opacity: .32;
 }
 
 .hero-overlay {
@@ -611,7 +616,21 @@ body.dark-mode .profile-card-socials a {
   grid-template-rows: minmax(0, 1fr) auto auto;
   align-items: center;
   gap: clamp(4px, 1vh, 10px) clamp(18px, 3vw, 44px);
-  padding: calc(var(--header-height) + clamp(10px, 2vh, 22px)) 0 clamp(36px, 7vh, 78px);
+  padding: calc(var(--header-height) + clamp(10px, 2vh, 22px)) 0 calc(var(--hero-landscape-height) + clamp(18px, 3vh, 36px));
+}
+
+.hero-bottom-landscape {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--hero-landscape-height);
+  background-image: url("assets/images/hero-bottom-visible-mountains-forest-strip-transparent.webp");
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  background-size: 100% 100%;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .hero-quote,
@@ -751,6 +770,10 @@ body.dark-mode .hero-overlay {
   background: linear-gradient(90deg, rgba(30,29,48,.72), rgba(30,29,48,.32), rgba(30,29,48,.60));
 }
 
+body.dark-mode .hero::after {
+  filter: drop-shadow(0 0 14px rgba(210, 237, 105, .10));
+}
+
 body.dark-mode .hero-lead,
 body.dark-mode .hero-quote cite,
 body.dark-mode .hero-quote-author {
@@ -877,27 +900,10 @@ body.dark-mode .stat-item strong {
 .contact-section {
   min-height: 100svh;
   padding: clamp(28px, 5vh, 64px) 0;
-  background-color: transparent;
-  background-image:
-    linear-gradient(rgba(248, 243, 239, .22), rgba(248, 243, 239, .22)),
-    var(--section-bg);
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
+  background: transparent;
   border-top: 1px solid var(--section-divider);
   scroll-margin-top: 0;
   overflow: visible;
-}
-
-body.dark-mode .adventures-section,
-body.dark-mode .toolkit-section,
-body.dark-mode .map-section,
-body.dark-mode .info-section,
-body.dark-mode .contact-section {
-  background-image:
-    linear-gradient(rgba(30, 29, 48, .36), rgba(30, 29, 48, .36)),
-    var(--section-bg);
 }
 
 .adventures-section,
@@ -2446,7 +2452,7 @@ body.dark-mode .detail-chart-axis {
     min-height: 0;
     grid-template-rows: auto auto auto;
     align-content: center;
-    padding: calc(var(--header-height) + clamp(8px, 2vh, 18px)) 0 clamp(10px, 2vh, 22px);
+    padding: calc(var(--header-height) + clamp(8px, 2vh, 18px)) 0 calc(var(--hero-landscape-height) + clamp(14px, 2.5vh, 28px));
   }
 
   .toolkit-grid {
@@ -2591,6 +2597,7 @@ body.dark-mode .detail-chart-axis {
   }
 
   .hero {
+    --hero-landscape-height: 120px;
     height: 100svh;
     background: transparent;
     position: relative;
@@ -2598,12 +2605,16 @@ body.dark-mode .detail-chart-axis {
     transition: background 0.3s, color 0.3s;
   }
 
+  .hero-bottom-landscape {
+    background-size: cover;
+  }
+
   .hero-content {
     height: 100%;
     min-height: 0;
     align-content: center;
     gap: clamp(8px, 1.8vh, 14px);
-    padding: calc(var(--header-height) + 8px) 0 clamp(8px, 1.6vh, 14px);
+    padding: calc(var(--header-height) + 8px) 0 calc(var(--hero-landscape-height) + 12px);
   }
 
   .hero-copy,
@@ -2648,25 +2659,8 @@ body.dark-mode .detail-chart-axis {
   .contact-section {
     height: auto;
     min-height: 100svh;
-    background-color: transparent;
-    background-image:
-      linear-gradient(rgba(248, 243, 239, .22), rgba(248, 243, 239, .22)),
-      var(--section-bg);
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
+    background: transparent;
     overflow: visible;
-  }
-
-  body.dark-mode .adventures-section,
-  body.dark-mode .toolkit-section,
-  body.dark-mode .map-section,
-  body.dark-mode .info-section,
-  body.dark-mode .contact-section {
-    background-image:
-      linear-gradient(rgba(30, 29, 48, .36), rgba(30, 29, 48, .36)),
-      var(--section-bg);
   }
 
   .card-grid,

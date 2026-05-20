@@ -1259,19 +1259,18 @@ function initAdventureDetailPage() {
     });
 }
 
-// Applies a lazy-loaded background image to a page or section.
+// Applies a lazy-loaded background image to the page.
 function loadLazyBackground(element) {
   const imagePath = element.dataset.bg;
   if (!imagePath) return;
 
-  const targetProperty = element === document.body ? "--page-bg-image" : "--section-bg";
-  element.style.setProperty(targetProperty, `url("${imagePath}")`);
+  element.style.setProperty("--page-bg-image", `url("${imagePath}")`);
   element.classList.add("bg-loaded");
 }
 
-// Lazily loads section/page backgrounds, while loading priority backgrounds right away.
+// Lazily loads the page background, while loading priority backgrounds right away.
 function initLazySectionBackgrounds() {
-  const lazySections = document.querySelectorAll(".has-section-bg[data-bg], .has-page-bg[data-bg]");
+  const lazySections = document.querySelectorAll(".has-page-bg[data-bg]");
   if (!lazySections.length) return;
 
   lazySections.forEach(section => {
@@ -1300,44 +1299,7 @@ function initLazySectionBackgrounds() {
   });
 }
 
-function initMobileSectionParallax() {
-  const sections = Array.from(document.querySelectorAll(".has-section-bg"));
-  if (!sections.length) return;
-
-  const mobileQuery = window.matchMedia("(max-width: 700px)");
-  let ticking = false;
-
-  const update = () => {
-    ticking = false;
-
-    if (!mobileQuery.matches) {
-      sections.forEach(section => section.style.removeProperty("background-position"));
-      return;
-    }
-
-    const viewportHeight = window.innerHeight || 1;
-    sections.forEach(section => {
-      const rect = section.getBoundingClientRect();
-      const progress = (rect.top - viewportHeight / 2) / viewportHeight;
-      const offset = Math.max(-34, Math.min(34, progress * -42));
-      section.style.backgroundPosition = `center calc(50% + ${offset}px)`;
-    });
-  };
-
-  const requestUpdate = () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(update);
-  };
-
-  update();
-  window.addEventListener("scroll", requestUpdate, { passive: true });
-  window.addEventListener("resize", requestUpdate, { passive: true });
-  mobileQuery.addEventListener?.("change", requestUpdate);
-}
-
 initLazySectionBackgrounds();
-initMobileSectionParallax();
 initAdventureDetailPage();
 
 // THEME TOGGLE LOGIC
