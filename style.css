@@ -48,7 +48,7 @@ body {
   color: var(--text);
   background-color: transparent;
   background-image:
-    linear-gradient(rgba(248, 243, 239, .38), rgba(248, 243, 239, .38)),
+    linear-gradient(rgba(248, 243, 239, .24), rgba(248, 243, 239, .24)),
     var(--page-bg-image);
   background-size: cover;
   background-position: center;
@@ -85,14 +85,14 @@ body.dark-mode {
   --stats-text: #ffffff;
   --stats-muted: #fffdf8;
   background-image:
-    linear-gradient(rgba(30, 29, 48, .52), rgba(30, 29, 48, .52)),
+    linear-gradient(rgba(30, 29, 48, .42), rgba(30, 29, 48, .42)),
     var(--page-bg-image);
   background-color: #1E1D30;
 }
 
 body.dark-mode.has-page-bg {
   background-image:
-    linear-gradient(rgba(30, 29, 48, .52), rgba(30, 29, 48, .52)),
+    linear-gradient(rgba(30, 29, 48, .42), rgba(30, 29, 48, .42)),
     var(--page-bg-image);
 }
 
@@ -879,7 +879,7 @@ body.dark-mode .stat-item strong {
   padding: clamp(28px, 5vh, 64px) 0;
   background-color: transparent;
   background-image:
-    linear-gradient(rgba(248, 243, 239, .32), rgba(248, 243, 239, .32)),
+    linear-gradient(rgba(248, 243, 239, .22), rgba(248, 243, 239, .22)),
     var(--section-bg);
   background-size: cover;
   background-position: center;
@@ -896,7 +896,7 @@ body.dark-mode .map-section,
 body.dark-mode .info-section,
 body.dark-mode .contact-section {
   background-image:
-    linear-gradient(rgba(30, 29, 48, .48), rgba(30, 29, 48, .48)),
+    linear-gradient(rgba(30, 29, 48, .36), rgba(30, 29, 48, .36)),
     var(--section-bg);
 }
 
@@ -2446,7 +2446,7 @@ body.dark-mode .detail-chart-axis {
     min-height: 0;
     grid-template-rows: auto auto auto;
     align-content: center;
-    padding: calc(var(--header-height) + clamp(8px, 2vh, 18px)) 0 calc(var(--hero-landscape-height) + clamp(14px, 2.5vh, 28px));
+    padding: calc(var(--header-height) + clamp(8px, 2vh, 18px)) 0 clamp(10px, 2vh, 22px);
   }
 
   .toolkit-grid {
@@ -2551,8 +2551,13 @@ body.dark-mode .detail-chart-axis {
     --hero-vine-width: clamp(58px, 18vw, 84px);
   }
 
-  body {
-    background-attachment: scroll;
+  body,
+  .adventures-section,
+  .toolkit-section,
+  .map-section,
+  .info-section,
+  .contact-section {
+    background-attachment: fixed;
   }
 
   .container { width: calc(100% - 20px); }
@@ -2586,7 +2591,6 @@ body.dark-mode .detail-chart-axis {
   }
 
   .hero {
-    --hero-landscape-height: 120px;
     height: 100svh;
     background: transparent;
     position: relative;
@@ -2594,16 +2598,12 @@ body.dark-mode .detail-chart-axis {
     transition: background 0.3s, color 0.3s;
   }
 
-  .hero-bottom-landscape {
-    background-size: cover;
-  }
-
   .hero-content {
     height: 100%;
     min-height: 0;
     align-content: center;
     gap: clamp(8px, 1.8vh, 14px);
-    padding: calc(var(--header-height) + 8px) 0 calc(var(--hero-landscape-height) + 12px);
+    padding: calc(var(--header-height) + 8px) 0 clamp(8px, 1.6vh, 14px);
   }
 
   .hero-copy,
@@ -2648,8 +2648,25 @@ body.dark-mode .detail-chart-axis {
   .contact-section {
     height: auto;
     min-height: 100svh;
-    background: transparent;
+    background-color: transparent;
+    background-image:
+      linear-gradient(rgba(248, 243, 239, .22), rgba(248, 243, 239, .22)),
+      var(--section-bg);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
     overflow: visible;
+  }
+
+  body.dark-mode .adventures-section,
+  body.dark-mode .toolkit-section,
+  body.dark-mode .map-section,
+  body.dark-mode .info-section,
+  body.dark-mode .contact-section {
+    background-image:
+      linear-gradient(rgba(30, 29, 48, .36), rgba(30, 29, 48, .36)),
+      var(--section-bg);
   }
 
   .card-grid,

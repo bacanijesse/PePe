@@ -1300,7 +1300,44 @@ function initLazySectionBackgrounds() {
   });
 }
 
+function initMobileSectionParallax() {
+  const sections = Array.from(document.querySelectorAll(".has-section-bg"));
+  if (!sections.length) return;
+
+  const mobileQuery = window.matchMedia("(max-width: 700px)");
+  let ticking = false;
+
+  const update = () => {
+    ticking = false;
+
+    if (!mobileQuery.matches) {
+      sections.forEach(section => section.style.removeProperty("background-position"));
+      return;
+    }
+
+    const viewportHeight = window.innerHeight || 1;
+    sections.forEach(section => {
+      const rect = section.getBoundingClientRect();
+      const progress = (rect.top - viewportHeight / 2) / viewportHeight;
+      const offset = Math.max(-34, Math.min(34, progress * -42));
+      section.style.backgroundPosition = `center calc(50% + ${offset}px)`;
+    });
+  };
+
+  const requestUpdate = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  };
+
+  update();
+  window.addEventListener("scroll", requestUpdate, { passive: true });
+  window.addEventListener("resize", requestUpdate, { passive: true });
+  mobileQuery.addEventListener?.("change", requestUpdate);
+}
+
 initLazySectionBackgrounds();
+initMobileSectionParallax();
 initAdventureDetailPage();
 
 // THEME TOGGLE LOGIC
